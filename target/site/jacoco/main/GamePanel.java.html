@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GamePanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Proiect PIP</a> &gt; <a href="index.source.html" class="el_package">main</a> &gt; <span class="el_source">GamePanel.java</span></div><h1>GamePanel.java</h1><pre class="source lang-java linenums">package main;
+
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+import inputs.KeyboardInputs;
+import inputs.MouseInputs;
+import static utilz.Constants.PlayerConstants.*;
+import static utilz.Constants.Directions.*;
+
+public class GamePanel extends JPanel{
+	
+	private MouseInputs mouseInputs;
+	private Game game;
+	
+<span class="nc" id="L20">	public GamePanel(Game game) {</span>
+<span class="nc" id="L21">		this.game = game;</span>
+<span class="nc" id="L22">		 mouseInputs = new MouseInputs(this);</span>
+<span class="nc" id="L23">		 addKeyListener(new KeyboardInputs(this));</span>
+<span class="nc" id="L24">		 addMouseListener(mouseInputs);</span>
+<span class="nc" id="L25">		 addMouseMotionListener(mouseInputs);</span>
+<span class="nc" id="L26">		 setPanelSize();</span>
+<span class="nc" id="L27">	}</span>
+	
+	public void updateGame() {
+		
+<span class="nc" id="L31">	}</span>
+	
+	
+
+	private void setPanelSize() {
+<span class="nc" id="L36">		Dimension size = new Dimension(1200,600);</span>
+<span class="nc" id="L37">		setPreferredSize(size);</span>
+		
+<span class="nc" id="L39">	}</span>
+
+	
+
+	public void paintComponent(Graphics g) {
+<span class="nc" id="L44">		super.paintComponent(g);</span>
+<span class="nc" id="L45">		game.render(g);</span>
+<span class="nc" id="L46">	}</span>
+	
+	public Game getGame() {
+<span class="nc" id="L49">		return game;</span>
+	}
+	
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,13 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Proiect PIP,entities,Player,267,0,26,0,69,0,29,0,16,0
+Proiect PIP,entities,Entity,9,0,0,0,4,0,1,0,1,0
+Proiect PIP,inputs,KeyboardInputs,69,0,10,0,22,0,12,0,4,0
+Proiect PIP,inputs,MouseInputs,13,0,0,0,10,0,8,0,8,0
+Proiect PIP,main,MainClass,8,0,0,0,3,0,2,0,2,0
+Proiect PIP,main,GameWindow.new WindowFocusListener() {...},15,0,0,0,4,0,3,0,3,0
+Proiect PIP,main,Game,142,0,6,0,47,0,11,0,8,0
+Proiect PIP,main,GamePanel,50,0,0,0,16,0,5,0,5,0
+Proiect PIP,main,GameWindow,39,0,0,0,9,0,1,0,1,0
+Proiect PIP,utilz,Constants.Directions,3,0,0,0,1,0,1,0,1,0
+Proiect PIP,utilz,Constants.PlayerConstants,11,0,3,0,5,0,4,0,2,0
+Proiect PIP,utilz,Constants,3,0,0,0,1,0,1,0,1,0

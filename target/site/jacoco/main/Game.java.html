@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Game.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Proiect PIP</a> &gt; <a href="index.source.html" class="el_package">main</a> &gt; <span class="el_source">Game.java</span></div><h1>Game.java</h1><pre class="source lang-java linenums">package main;
+
+import java.awt.Graphics;
+
+import entities.Player;
+
+public class Game implements Runnable{
+	private GameWindow gameWindow;
+	private GamePanel gamePanel;
+	private Thread gameThread;
+<span class="nc" id="L11">	private final int FPS_SET = 120;</span>
+<span class="nc" id="L12">	private final int UPS_SET = 200;</span>
+	
+	private Player player;
+	
+<span class="nc" id="L16">	public Game() {</span>
+<span class="nc" id="L17">		initClasses();</span>
+<span class="nc" id="L18">		gamePanel = new GamePanel(this);</span>
+<span class="nc" id="L19">		gameWindow = new GameWindow(gamePanel);</span>
+<span class="nc" id="L20">		gamePanel.requestFocus();</span>
+<span class="nc" id="L21">		startGameLoop();</span>
+		
+<span class="nc" id="L23">	}</span>
+	private void initClasses() {
+<span class="nc" id="L25">		player = new Player(200,200);</span>
+		
+<span class="nc" id="L27">	}</span>
+	@Override
+	public void run() {
+		
+<span class="nc" id="L31">		double timePerFrame = 1000000000.0/FPS_SET;</span>
+<span class="nc" id="L32">		double timePerUpdate = 1000000000.0/UPS_SET;</span>
+<span class="nc" id="L33">		long previousTime = System.nanoTime();</span>
+		
+<span class="nc" id="L35">		int frames = 0;</span>
+<span class="nc" id="L36">		int updates = 0;</span>
+<span class="nc" id="L37">		long lastCheck = System.currentTimeMillis();</span>
+		
+<span class="nc" id="L39">		double uFreq = 0;</span>
+<span class="nc" id="L40">		double fFreq = 0;</span>
+		
+		while(true) {
+			
+<span class="nc" id="L44">			long currentTime = System.nanoTime();</span>
+			
+<span class="nc" id="L46">			uFreq += (currentTime - previousTime) / timePerUpdate;</span>
+<span class="nc" id="L47">			fFreq += (currentTime - previousTime) / timePerFrame;</span>
+			
+<span class="nc" id="L49">			previousTime = currentTime;</span>
+			
+<span class="nc bnc" id="L51" title="All 2 branches missed.">			if(uFreq &gt;= 1) {</span>
+<span class="nc" id="L52">				update();</span>
+<span class="nc" id="L53">				updates++;</span>
+<span class="nc" id="L54">				uFreq--;</span>
+			}
+		
+			
+<span class="nc bnc" id="L58" title="All 2 branches missed.">			if(fFreq &gt;= 1) {</span>
+<span class="nc" id="L59">				gamePanel.repaint();</span>
+<span class="nc" id="L60">				frames++;</span>
+<span class="nc" id="L61">				fFreq--;</span>
+			}
+			
+<span class="nc bnc" id="L64" title="All 2 branches missed.">			if(System.currentTimeMillis() - lastCheck &gt;= 1000) {</span>
+<span class="nc" id="L65">				lastCheck = System.currentTimeMillis();</span>
+<span class="nc" id="L66">				System.out.println(&quot;FPS: &quot; + frames + &quot; UPS: &quot; + updates);</span>
+<span class="nc" id="L67">				frames = 0;</span>
+<span class="nc" id="L68">				updates= 0;</span>
+			}
+<span class="nc" id="L70">		}</span>
+	}
+	
+	public Player getPlayer(){
+<span class="nc" id="L74">		return player;</span>
+	}
+	
+	private void update() {
+<span class="nc" id="L78">		player.update();</span>
+		
+<span class="nc" id="L80">	}</span>
+	
+	public void render(Graphics g) {
+<span class="nc" id="L83">		player.render(g);</span>
+<span class="nc" id="L84">	}</span>
+	private void startGameLoop() {
+<span class="nc" id="L86">		gameThread = new Thread(this);</span>
+<span class="nc" id="L87">		gameThread.start();</span>
+		
+<span class="nc" id="L89">	}</span>
+	public void windowFocusLost() {
+<span class="nc" id="L91">		player.resetDirBooleans();</span>
+		
+<span class="nc" id="L93">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

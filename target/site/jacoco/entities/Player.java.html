@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Player.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Proiect PIP</a> &gt; <a href="index.source.html" class="el_package">entities</a> &gt; <span class="el_source">Player.java</span></div><h1>Player.java</h1><pre class="source lang-java linenums">package entities;
+
+import static utilz.Constants.Directions.DOWN;
+import static utilz.Constants.Directions.LEFT;
+import static utilz.Constants.Directions.RIGHT;
+import static utilz.Constants.Directions.UP;
+import static utilz.Constants.PlayerConstants.IDLE;
+import static utilz.Constants.PlayerConstants.RUNNING;
+
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
+
+public class Player extends Entity {
+
+  private BufferedImage[][] animations;
+<span class="nc" id="L20">  private int aniTick = 0, aniIndex = 0, aniSpeed = 20;</span>
+<span class="nc" id="L21">  private int playerAction = IDLE;</span>
+<span class="nc" id="L22">  private int playerDir = -1;</span>
+<span class="nc" id="L23">  private boolean moving = false;</span>
+  private boolean left, up, down, right;
+<span class="nc" id="L25">  private float playerSpeed = 1.0f;</span>
+
+  public Player(float x, float y) {
+<span class="nc" id="L28">    super(x, y);</span>
+<span class="nc" id="L29">    loadAnimations();</span>
+
+<span class="nc" id="L31">  }</span>
+  /**
+   * 
+   */
+  public void update() {
+<span class="nc" id="L36">    updatePos();</span>
+<span class="nc" id="L37">    updateAnimationTick(playerAction);</span>
+<span class="nc" id="L38">    setAnimation();</span>
+<span class="nc" id="L39">  }</span>
+
+  public void render(Graphics g) {
+<span class="nc" id="L42">    g.drawImage(animations[playerAction][aniIndex], (int) x, (int) y, null);</span>
+<span class="nc" id="L43">  }</span>
+
+  private void updatePos() {
+
+<span class="nc" id="L47">    moving = false;</span>
+
+<span class="nc bnc" id="L49" title="All 4 branches missed.">    if (left &amp;&amp; !right) {</span>
+<span class="nc" id="L50">      x -= playerSpeed;</span>
+<span class="nc" id="L51">      moving = true;</span>
+    }
+<span class="nc bnc" id="L53" title="All 4 branches missed.">    if (up &amp;&amp; !down) {</span>
+<span class="nc" id="L54">      y -= playerSpeed;</span>
+<span class="nc" id="L55">      moving = true;</span>
+    }
+<span class="nc bnc" id="L57" title="All 4 branches missed.">    if (right &amp;&amp; !left) {</span>
+<span class="nc" id="L58">      x += playerSpeed;</span>
+<span class="nc" id="L59">      moving = true;</span>
+    }
+<span class="nc bnc" id="L61" title="All 4 branches missed.">    if (down &amp;&amp; !up) {</span>
+<span class="nc" id="L62">      y += playerSpeed;</span>
+<span class="nc" id="L63">      moving = true;</span>
+    }
+
+<span class="nc" id="L66">  }</span>
+
+  private void setAnimation() {
+<span class="nc bnc" id="L69" title="All 2 branches missed.">    if (moving)</span>
+<span class="nc" id="L70">      playerAction = RUNNING;</span>
+    else
+<span class="nc" id="L72">      playerAction = IDLE;</span>
+
+<span class="nc" id="L74">  }</span>
+
+  private void updateAnimationTick(int i) {
+
+<span class="nc" id="L78">    aniTick++;</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">    if (aniTick &gt;= aniSpeed) {</span>
+<span class="nc" id="L80">      aniTick = 0;</span>
+<span class="nc" id="L81">      aniIndex++;</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">      if (aniIndex &gt;= animations[i].length)</span>
+<span class="nc" id="L83">        aniIndex = 0;</span>
+    }
+
+<span class="nc" id="L86">  }</span>
+
+  private void loadAnimations() {
+<span class="nc" id="L89">    InputStream is = getClass().getResourceAsStream(&quot;/SpriteSheet.png&quot;);</span>
+    try {
+<span class="nc" id="L91">      BufferedImage img = ImageIO.read(is);</span>
+
+<span class="nc" id="L93">      animations = new BufferedImage[2][12];</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">      for (int i = 0; i &lt; animations.length; i++)</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        for (int j = 0; j &lt; animations[i].length; j++)</span>
+<span class="nc" id="L96">          animations[i][j] = img.getSubimage(j * 100, i * 100, 100, 100);</span>
+<span class="nc" id="L97">    } catch (IOException e) {</span>
+      // TODO Auto-generated catch block
+<span class="nc" id="L99">      e.printStackTrace();</span>
+    } finally {
+      try {
+<span class="nc" id="L102">        is.close();</span>
+<span class="nc" id="L103">      } catch (IOException e) {</span>
+        // TODO Auto-generated catch block
+<span class="nc" id="L105">        e.printStackTrace();</span>
+<span class="nc" id="L106">      }</span>
+    }
+
+<span class="nc" id="L109">  }</span>
+
+  public boolean isLeft() {
+<span class="nc" id="L112">    return left;</span>
+  }
+
+  public void setLeft(boolean left) {
+<span class="nc" id="L116">    this.left = left;</span>
+<span class="nc" id="L117">  }</span>
+
+  public boolean isUp() {
+<span class="nc" id="L120">    return up;</span>
+  }
+
+  public void setUp(boolean up) {
+<span class="nc" id="L124">    this.up = up;</span>
+<span class="nc" id="L125">  }</span>
+
+  public boolean isDown() {
+<span class="nc" id="L128">    return down;</span>
+  }
+
+  public void setDown(boolean down) {
+<span class="nc" id="L132">    this.down = down;</span>
+<span class="nc" id="L133">  }</span>
+
+  public boolean isRight() {
+<span class="nc" id="L136">    return right;</span>
+  }
+
+  public void setRight(boolean right) {
+<span class="nc" id="L140">    this.right = right;</span>
+<span class="nc" id="L141">  }</span>
+
+  public void resetDirBooleans() {
+<span class="nc" id="L144">    left = false;</span>
+<span class="nc" id="L145">    up = false;</span>
+<span class="nc" id="L146">    right = false;</span>
+<span class="nc" id="L147">    down = false;</span>
+
+<span class="nc" id="L149">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
