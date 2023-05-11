@@ -24,19 +24,18 @@ public class Player extends Entity {
   private boolean moving = false, attacking = false;
   private boolean left, up, down, right, jump;
   private float playerSpeed = 1.1f;
-  
+
   private float airSpeed = 0f;
   private float gravity = 0.1f;
-  private float jumpSpeed = 5f * Game.SCALE;
-  private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
-  private boolean inAir = true; 
+  private float jumpSpeed = 4.3f * Game.SCALE;
+  private float fallSpeedAfterCollision = 0.3f * Game.SCALE;
+  private boolean inAir = true;
   private int image_direction = 0;
   int lastDir = 1;
   int[][] lvlData;
-  private float xOffset = 30*Game.SCALE;
-  private float yOffset = 23*Game.SCALE;
+  private float xOffset = 30 * Game.SCALE;
+  private float yOffset = 35 * Game.SCALE;
 
-  
 //    float x = this.x+(20*Game.SCALE);
 //    float y = this.y+(21*Game.SCALE);
 //    float h = this.height-21*Game.SCALE;
@@ -44,16 +43,12 @@ public class Player extends Entity {
 
   public Player(float x, float y, int width, int height) {
     super(x, y, width, height);
-    initHitbox(x, y, 50*Game.SCALE, 35*Game.SCALE);
+    initHitbox(x, y, 37 * Game.SCALE, 37 * Game.SCALE);
     loadAnimations();
   }
 
   public void update() {
-    if(!IsEntityOnFloor(hitbox,lvlData))
-    {
-      inAir = true;
-      System.out.println("dadadadada");
-    }
+
     updatePos();
     updateHitbox();
     updateAnimationTick(playerAction);
@@ -61,78 +56,76 @@ public class Player extends Entity {
   }
 
   public void render(Graphics g) {
-    g.drawImage(animations[playerAction][aniIndex], (int) (x-xOffset) , (int) (y-yOffset), playerDir * width, height,null);
+    g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset), (int) (y - yOffset), playerDir * width, height,
+        null);
     drawHitbox(g);
   }
 
   private void updatePos() {
     moving = false;
-    
-    if(jump)
+
+    if (jump)
       jump();
+
     if (!left && !right && !inAir)
       return;
-    
+
     float xSpeed = 0;
-    
+
     if (left)
-      xSpeed -=playerSpeed;
-    
+      xSpeed -= playerSpeed;
+
     if (right)
       xSpeed += playerSpeed;
-   
-    if(inAir) {
-      
-      if(canMoveHere(this.hitbox.x, this.hitbox.y + airSpeed, this.hitbox.width, this.hitbox.height, lvlData)) {
+
+    if (!inAir && !IsEntityOnFloor(hitbox, lvlData)) {
+      inAir = true;
+      // System.out.println("dadadadada");
+    }
+
+    if (inAir) {
+
+      if (canMoveHere(this.hitbox.x, this.hitbox.y + airSpeed, this.hitbox.width, this.hitbox.height, lvlData)) {
         this.y += airSpeed;
         airSpeed += gravity;
         updateXPos(xSpeed);
-      }else {
-        hitbox.y = GetEntityYNextToWall(hitbox,airSpeed);
-        if(airSpeed > 0)
+      } else {
+        hitbox.y = GetEntityYNextToWall(hitbox, airSpeed);
+        if (airSpeed > 0)
           resetInAir();
         else
           airSpeed = fallSpeedAfterCollision;
         updateXPos(xSpeed);
       }
-    
-    }else 
+
+    } else
       updateXPos(xSpeed);
     moving = true;
-   
-    
-   
-    }
 
-
-
-
+  }
 
   private void jump() {
-    if(inAir)
+    if (inAir)
       return;
     inAir = true;
     airSpeed = -jumpSpeed;
     System.out.println(airSpeed);
-    
+
   }
 
   private void resetInAir() {
     inAir = false;
     airSpeed = 0;
-    
+
   }
 
   private void updateXPos(float xSpeed) {
-    if (canMoveHere(this.hitbox.x + xSpeed, this.hitbox.y, this.hitbox.width, this.hitbox.height, lvlData))  
-   {
-      System.out.println("dada");
+    if (canMoveHere(this.hitbox.x + xSpeed, this.hitbox.y, this.hitbox.width, this.hitbox.height, lvlData)) {
+      // System.out.println("dada");
       this.x += xSpeed;
-   }else {
-     this.x = GetEntityXPosNextToWall(this.hitbox,xSpeed);
-   }
-
-
+    } else {
+      this.x = GetEntityXPosNextToWall(this.hitbox, xSpeed);
+    }
   }
 
   private void setAnimation() {
@@ -155,15 +148,12 @@ public class Player extends Entity {
         lastDir = 1;
       }
     }
-    
-   if(inAir)
-      if(airSpeed < 0) 
-       playerAction = JUMP_R;
-     else
-       playerAction = FALLING_R;
-        
-        
-      
+
+    if (inAir)
+      if (airSpeed < 0)
+        playerAction = JUMP_R;
+      else
+        playerAction = FALLING_R;
 
     if (attacking) {
       if (lastDir == 0)
