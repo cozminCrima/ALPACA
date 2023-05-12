@@ -35,7 +35,7 @@ public class Player extends Entity {
   int[][] lvlData;
   private float xOffset = 30*Game.SCALE;
   private float yOffset = 23*Game.SCALE;
-
+//YOYOYOYOYOYO
   
 //    float x = this.x+(20*Game.SCALE);
 //    float y = this.y+(21*Game.SCALE);
@@ -157,10 +157,12 @@ public class Player extends Entity {
     }
     
    if(inAir)
-      if(airSpeed < 0) 
+      if(airSpeed < 0 && right) 
        playerAction = JUMP_R;
-     else
-       playerAction = FALLING_R;
+    // else
+     //  playerAction = FALLING_R;
+      if(airSpeed < 0 && left)
+        playerAction = JUMP_L;
         
         
       
@@ -264,7 +266,7 @@ public class Player extends Entity {
     up = false;
     right = false;
     down = false;
-    // jump = false;
+    jump = false;
 
   }
 }
