@@ -4,6 +4,9 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import entities.Player;
+import gamestates.Gamestate;
+import gamestates.Menu;
+import gamestates.Playing;
 import levels.LevelManager;
 import utilz.LoadSave;
 
@@ -13,9 +16,10 @@ public class Game implements Runnable {
   private Thread gameThread;
   private final int FPS_SET = 120;
   private final int UPS_SET = 200;
-  private Player player;
-  private LevelManager levelManager;
 
+  private Playing playing;
+  private Menu menu;
+  
   public final static int TILES_DEFAULT_SIZE = 38;
   public final static float SCALE = 1.5f;
   public final static int TILES_WIDTH = 30;
@@ -28,9 +32,9 @@ public class Game implements Runnable {
   
   
   public Game() {
-    if (bg == null) {
-     bg = LoadSave.GetSpriteAtlas(LoadSave.BACKGROUND);
-    }
+//    if (bg == null) {
+//     bg = LoadSave.GetSpriteAtlas(LoadSave.BACKGROUND);
+//    }
     initClasses();
     gamePanel = new GamePanel(this);
     gameWindow = new GameWindow(gamePanel);
@@ -40,10 +44,8 @@ public class Game implements Runnable {
   }
 
   private void initClasses() {
-    levelManager = new LevelManager(this);
-    player = new Player(200, 200, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE)); // ,(int) (100 * SCALE),(int)
-                                                                                       // (100 * SCALE));
-    player.loadLvlData(levelManager.getCurrentLevel().getLvlData());
+    menu = new Menu(this);
+    playing = new Playing(this);
   }
 
   @Override
@@ -90,21 +92,41 @@ public class Game implements Runnable {
     }
   }
 
-  public Player getPlayer() {
-    return player;
-  }
+
 
   private void update() {
-    player.update();
-    levelManager.update();
+    
+    
+    switch(Gamestate.state) {
+    case MENU:
+      menu.update();
+      break;
+    case PLAYING:
+      playing.update();
+    
+      break;
+    default:
+      break;
+    
+    }
 
   }
 
   public void render(Graphics g) {
  
-    g.drawImage(bg, 0, 0, GAME_WIDTH, GAME_HEIGHT,null);
-    levelManager.draw(g);
-    player.render(g);
+    
+    switch(Gamestate.state) {
+    case MENU:
+      menu.draw(g);
+      break;
+    case PLAYING:
+      playing.draw(g);
+      
+  
+      break;
+    default:
+      break;
+      }
   }
 
   private void startGameLoop() {
@@ -113,9 +135,17 @@ public class Game implements Runnable {
 
   }
 
-  public void windowFocusLost() {
-    player.resetDirBooleans();
-
+ 
+  public Menu getMenu() {
+    return menu;
   }
-
+  
+  public Playing getPlaying() {
+    return playing;
+  }
+  
+  public void windowFocusLost() {
+    if(Gamestate.state == Gamestate.PLAYING)
+      playing.getPlayer().resetDirBooleans();
+  }
 }
