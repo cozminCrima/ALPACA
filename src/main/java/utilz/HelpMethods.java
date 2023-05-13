@@ -17,6 +17,8 @@ public class HelpMethods {
             if (!isSolid(x + width / 2, y + height, lvlData))
               if (!isSolid(x + width, y + height / 2, lvlData))
                 if (!isSolid(x, y + height / 2, lvlData))
+                  // if (!isSolid(x + width, y + height * 2 / 3, lvlData))
+                  // if (!isSolid(x, y + height * 2 / 3, lvlData))
                   if (!isSolid(x + width / 2, y, lvlData))
                     return true;
 

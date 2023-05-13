@@ -30,11 +30,13 @@ public class Level {
         int ok = 0;
         lvlmap[i][j] = lvlspr.getSubimage(j * 38, i * 38, 38, 38);
         if(lvlmap[i][j].getRGB(19, 19) != 0)
-          this.lvlData[i][j] = lvlmap[i][j].getRGB(19, 19);
+          this.lvlData[i][j] = 1;
+        else
+          this.lvlData[i][j] = 0;
           //ok = 1;
-       // System.out.print(ok +" " );
+       //System.out.print(this.lvlData[i][j] + " " );
       }
-        //System.out.println();
+         //System.out.println();
         //this.lvlData[i][j] = lvlmap[i][j].getRGB(19, 19);
         // System.out.println(lvlmap.length + );
     }
