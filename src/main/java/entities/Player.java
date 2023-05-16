@@ -26,7 +26,7 @@ public class Player extends Entity {
   private float playerSpeed = 1.3f;
 
   private float airSpeed = 0f;
-  private float gravity = 0.09f; // ideal value .09 -> otherwise collision bugs idk y
+  private float gravity = 0.1f * Game.SCALE;
   private float jumpSpeed = 4.3f * Game.SCALE;
   private float fallSpeedAfterCollision = 0.3f * Game.SCALE;
   private boolean inAir = true;
@@ -44,7 +44,7 @@ public class Player extends Entity {
 
   public Player(float x, float y, int width, int height) {
     super(x, y, width, height);
-    initHitbox(x, y, 35 * Game.SCALE, 35 * Game.SCALE);
+    initHitbox(x, y, (int) (35 * Game.SCALE), (int) (35 * Game.SCALE));
     loadAnimations();
   }
 
@@ -57,9 +57,9 @@ public class Player extends Entity {
   }
 
   public void render(Graphics g, int lvlOffset) {
-    g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset) - lvlOffset, (int) (y - yOffset), playerDir * width, height,
-        null);
-    drawHitbox(g,lvlOffset);
+    g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset) - lvlOffset, (int) (y - yOffset),
+        playerDir * width, height, null);
+    drawHitbox(g, lvlOffset);
   }
 
   private void updatePos() {
@@ -99,11 +99,10 @@ public class Player extends Entity {
         updateXPos(xSpeed);
       }
 
-    } else
-    {
+    } else {
       updateXPos(xSpeed);
     }
-      
+
     moving = true;
 
   }
@@ -113,7 +112,7 @@ public class Player extends Entity {
       return;
     inAir = true;
     airSpeed = -jumpSpeed;
-    //System.out.println(airSpeed);
+    // System.out.println(airSpeed);
   }
 
   private void resetInAir() {
@@ -150,9 +149,9 @@ public class Player extends Entity {
         } else if (airSpeed < 0 && left) {
           playerAction = JUMP_L;
           // lastDir = 1;
-        } else if (airSpeed-1 > 0 && right)
+        } else if (airSpeed - 1 > 0 && right)
           playerAction = FALLING_R;
-        else if (airSpeed-1 > 0 && left)
+        else if (airSpeed - 1 > 0 && left)
           playerAction = FALLING_L;
 
       } else {
@@ -179,7 +178,7 @@ public class Player extends Entity {
   }
 
   private void resetAniTick() {
-    
+
     aniTick = 0;
     aniIndex = 0;
   }
@@ -211,8 +210,6 @@ public class Player extends Entity {
   public void loadLvlData(int[][] lvlData) {
     this.lvlData = lvlData;
   }
-  
-  
 
   public boolean isLeft() {
     return left;
