@@ -9,7 +9,8 @@ import javax.imageio.ImageIO;
 public class LoadSave {
 
   public static final String PLAYER_ATLAS = "Spritesheet_idle_walk_attack_jump_fall.png";
-  public static final String LEVEL_ATLAS = "map0.png";
+  //public static final String LEVEL_ATLAS = "map0.png";
+  public static final String LEVEL_ATLAS = "lvlamap1.png";
   public static final String BACKGROUND = "clearskybg.png";
 
   public static BufferedImage GetSpriteAtlas(String fname) {

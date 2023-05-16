@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-
+import levels.Level;
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
@@ -20,6 +20,13 @@ public class Playing extends State implements Statemethods{
   private LevelManager levelManager;
   private BufferedImage bg = null;
 
+  
+  private int xLvlOffset;
+  private int leftBorder = (int) (0.3 * Game.GAME_WIDTH);
+  private int rightBorder = (int) (0.7 * Game.GAME_WIDTH);
+  private int lvlTilesWide = 100;//Level.getLvlData()[0].length;
+  private int maxTilesOffset = lvlTilesWide - Game.TILES_WIDTH;
+  private int maxLvlOffsetX = maxTilesOffset * Game.TILES_SIZE;
   
   private void initClasses() {
     levelManager = new LevelManager(game);
@@ -43,16 +50,36 @@ public class Playing extends State implements Statemethods{
 
   @Override
   public void update() {
+    
+    checkCloseToBorder();
+    
     levelManager.update();
     player.update();
+    
+  }
+
+  private void checkCloseToBorder() {
+    
+    int playerX = (int) player.getHitbox().x;
+    int diff = playerX - xLvlOffset;
+    
+    if(diff>rightBorder)
+      xLvlOffset += diff - rightBorder;
+    else if(diff < leftBorder)
+      xLvlOffset += diff - leftBorder;
+    
+    if(xLvlOffset > maxLvlOffsetX)
+      xLvlOffset = maxLvlOffsetX;
+    else if(xLvlOffset < 0)
+      xLvlOffset = 0;
     
   }
 
   @Override
   public void draw(Graphics g) {
     g.drawImage(bg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT,null);
-    levelManager.draw(g);
-    player.render(g);
+    levelManager.draw(g, xLvlOffset);
+    player.render(g, xLvlOffset);
     
   }
 

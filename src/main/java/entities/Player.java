@@ -23,10 +23,10 @@ public class Player extends Entity {
   public int playerDir = 1;
   private boolean moving = false, attacking = false;
   private boolean left, up, down, right, jump;
-  private float playerSpeed = 1.1f;
+  private float playerSpeed = 1.3f;
 
   private float airSpeed = 0f;
-  private float gravity = 0.1f;
+  private float gravity = 0.09f; // ideal value .09 -> otherwise collision bugs idk y
   private float jumpSpeed = 4.3f * Game.SCALE;
   private float fallSpeedAfterCollision = 0.3f * Game.SCALE;
   private boolean inAir = true;
@@ -37,7 +37,6 @@ public class Player extends Entity {
   private float xOffset = 30 * Game.SCALE;
   private float yOffset = 35 * Game.SCALE;
 
-
 //    float x = this.x+(20*Game.SCALE);
 //    float y = this.y+(21*Game.SCALE);
 //    float h = this.height-21*Game.SCALE;
@@ -45,7 +44,7 @@ public class Player extends Entity {
 
   public Player(float x, float y, int width, int height) {
     super(x, y, width, height);
-    initHitbox(x, y, 37 * Game.SCALE, 37 * Game.SCALE);
+    initHitbox(x, y, 35 * Game.SCALE, 35 * Game.SCALE);
     loadAnimations();
   }
 
@@ -57,10 +56,10 @@ public class Player extends Entity {
     setAnimation();
   }
 
-  public void render(Graphics g) {
-    g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset), (int) (y - yOffset), playerDir * width, height,
+  public void render(Graphics g, int lvlOffset) {
+    g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset) - lvlOffset, (int) (y - yOffset), playerDir * width, height,
         null);
-    drawHitbox(g);
+    drawHitbox(g,lvlOffset);
   }
 
   private void updatePos() {
@@ -101,7 +100,10 @@ public class Player extends Entity {
       }
 
     } else
+    {
       updateXPos(xSpeed);
+    }
+      
     moving = true;
 
   }
@@ -111,8 +113,7 @@ public class Player extends Entity {
       return;
     inAir = true;
     airSpeed = -jumpSpeed;
-    System.out.println(airSpeed);
-
+    //System.out.println(airSpeed);
   }
 
   private void resetInAir() {
@@ -141,28 +142,30 @@ public class Player extends Entity {
         playerAction = IDLE_R;
       }
     } else {
-      if (left) {
-        playerAction = RUNNING_L;
-        lastDir = 0;
-      }
-      if (right) {
-        playerAction = RUNNING_R;
-        lastDir = 1;
+
+      if (inAir) {
+        if (airSpeed < 0 && right) {
+          playerAction = JUMP_R;
+          // lastDir = 0;
+        } else if (airSpeed < 0 && left) {
+          playerAction = JUMP_L;
+          // lastDir = 1;
+        } else if (airSpeed-1 > 0 && right)
+          playerAction = FALLING_R;
+        else if (airSpeed-1 > 0 && left)
+          playerAction = FALLING_L;
+
+      } else {
+        if (left && IsEntityOnFloor(hitbox, lvlData)) {
+          playerAction = RUNNING_L;
+          lastDir = 0;
+        }
+        if (right && IsEntityOnFloor(hitbox, lvlData)) {
+          playerAction = RUNNING_R;
+          lastDir = 1;
+        }
       }
     }
-
-    
-   if(inAir)
-      if(airSpeed < 0 && right) 
-       playerAction = JUMP_R;
-    // else
-     //  playerAction = FALLING_R;
-      if(airSpeed < 0 && left)
-        playerAction = JUMP_L;
-        
-        
-      
-
 
     if (attacking) {
       if (lastDir == 0)
@@ -176,6 +179,7 @@ public class Player extends Entity {
   }
 
   private void resetAniTick() {
+    
     aniTick = 0;
     aniIndex = 0;
   }
@@ -207,6 +211,8 @@ public class Player extends Entity {
   public void loadLvlData(int[][] lvlData) {
     this.lvlData = lvlData;
   }
+  
+  
 
   public boolean isLeft() {
     return left;
