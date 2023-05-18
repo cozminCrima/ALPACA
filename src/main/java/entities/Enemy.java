@@ -26,6 +26,7 @@ public class Enemy extends Entity {
 
 	private float xOffset = 30 * Game.SCALE;
 	private float yOffset = 35 * Game.SCALE;
+	private boolean isVisible = true;
 
 	public Enemy(float x, float y, int width, int height) {
 		super(x, y, width, height,ColliderTag.Enemy);
@@ -41,9 +42,9 @@ public class Enemy extends Entity {
 	}
 
 	public void render(Graphics g) {
+	    if(isVisible)
 		g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset), (int) (y - yOffset), playerDir * width,
 				height, null);
-		drawHitbox(g);
 	}
 
 	private void updatePos() {
@@ -224,6 +225,8 @@ public class Enemy extends Entity {
 	// public boolean isAttacking() {
 //		    return attacking;
 	// }
+	
+	
 
 
 	public void resetDirBooleans() {
@@ -235,7 +238,15 @@ public class Enemy extends Entity {
 
 	}
 
-	@Override
+	public boolean isVisible() {
+    return isVisible;
+  }
+
+  public void setVisible(boolean isVisible) {
+    this.isVisible = isVisible;
+  }
+
+  @Override
 	public void OnCollisionEnter(Collider col) {
 		// TODO Auto-generated method stub
 		

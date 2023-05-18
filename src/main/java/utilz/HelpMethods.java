@@ -76,5 +76,12 @@ public class HelpMethods {
         return false;
     return true;
   }
-
+  
+  public static boolean IsInFOV(Rectangle2D.Float hitbox,int xLevelOffset)
+  {
+    if(hitbox.x>xLevelOffset && hitbox.x< xLevelOffset + Game.GAME_WIDTH)
+      return true;
+    return false;
+      
+  }
 }

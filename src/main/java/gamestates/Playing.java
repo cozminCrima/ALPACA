@@ -14,7 +14,7 @@ import entities.Player;
 import levels.LevelManager;
 import main.Game;
 import ui.PauseOverlay;
-import utilz.LoadSave;
+import utilz.*;
 
 public class Playing extends State implements Statemethods {
   public Playing(Game game) {
@@ -50,6 +50,7 @@ public class Playing extends State implements Statemethods {
     collisionManager.addCollider(enemy.getCollider());
     
     player.loadLvlData(levelManager.getCurrentLevel().getLvlData());
+    enemy.loadLvlData(levelManager.getCurrentLevel().getLvlData());
     if (bg == null) {
       bg = LoadSave.GetSpriteAtlas(LoadSave.BACKGROUND);
     }
@@ -75,6 +76,12 @@ public class Playing extends State implements Statemethods {
       player.update();
       enemy.update();
       collisionManager.updateColliders();
+      
+
+      enemy.setVisible(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(),xLvlOffset));
+      
+      System.out.println(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(),xLvlOffset));
+      
     } else {
       pauseOverlay.update();
     }
