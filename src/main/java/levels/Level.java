@@ -11,8 +11,8 @@ public class Level {
 
   public Level(BufferedImage img) {
     this.lvlSprites = img;
-    int n = (int) (Game.SCALE * (lvlSprites.getHeight()/Game.TILES_SIZE));
-    int m = (int) (Game.SCALE *(lvlSprites.getWidth()/Game.TILES_SIZE));
+    int n = (int) ((lvlSprites.getHeight()/38));
+    int m = (int) ((lvlSprites.getWidth()/38));
     System.out.println("n + m: "+n+" " +m);
     this.lvlData = new int[n][m];
     for (int i = 0; i < n; i++)
@@ -30,11 +30,13 @@ public class Level {
         int ok = 0;
         lvlmap[i][j] = lvlspr.getSubimage(j * 38, i * 38, 38, 38);
         if(lvlmap[i][j].getRGB(19, 19) != 0)
-          this.lvlData[i][j] = lvlmap[i][j].getRGB(19, 19);
+          this.lvlData[i][j] = 1;
+        else
+          this.lvlData[i][j] = 0;
           //ok = 1;
-       // System.out.print(ok +" " );
+       //System.out.print(this.lvlData[i][j] + " " );
       }
-        //System.out.println();
+         //System.out.println();
         //this.lvlData[i][j] = lvlmap[i][j].getRGB(19, 19);
         // System.out.println(lvlmap.length + );
     }

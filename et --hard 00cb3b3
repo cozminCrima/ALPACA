@@ -1,0 +1,18 @@
+[33m00cb3b3[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: checkout: moving from collider+enemy to main
+[33m61e2b7f[m[33m ([m[1;31morigin/collider+enemy[m[33m, [m[1;32mcollider+enemy[m[33m)[m HEAD@{1}: checkout: moving from main to collider+enemy
+[33m00cb3b3[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{2}: commit (merge): Resolved merge conflicts in Player.java
+[33mfcd690e[m[33m ([m[1;31morigin/jump&fall_anim_v2[m[33m, [m[1;32mjump&fall_anim_v2[m[33m)[m HEAD@{3}: checkout: moving from sidecroll to main
+[33mfde648f[m[33m ([m[1;31morigin/sidecroll[m[33m, [m[1;32msidecroll[m[33m)[m HEAD@{4}: checkout: moving from main to sidecroll
+[33mfcd690e[m[33m ([m[1;31morigin/jump&fall_anim_v2[m[33m, [m[1;32mjump&fall_anim_v2[m[33m)[m HEAD@{5}: merge jump&fall_anim_v2: Fast-forward
+[33m14d030e[m HEAD@{6}: checkout: moving from jump&fall_anim_v2 to main
+[33mfcd690e[m[33m ([m[1;31morigin/jump&fall_anim_v2[m[33m, [m[1;32mjump&fall_anim_v2[m[33m)[m HEAD@{7}: checkout: moving from main to jump&fall_anim_v2
+[33m14d030e[m HEAD@{8}: commit (merge): Solved merge conflicts in Player.java
+[33m1615934[m HEAD@{9}: pull: Fast-forward
+[33m736abcf[m HEAD@{10}: checkout: moving from jumping_collision_hitbox_fixed to main
+[33m7ca64c0[m[33m ([m[1;31morigin/jumping_collision_hitbox_fixed[m[33m, [m[1;32mjumping_collision_hitbox_fixed[m[33m)[m HEAD@{11}: checkout: moving from main to jumping_collision_hitbox_fixed
+[33m736abcf[m HEAD@{12}: checkout: moving from menu to main
+[33m6585294[m[33m ([m[1;31morigin/menu[m[33m, [m[1;32mmenu[m[33m)[m HEAD@{13}: commit: menu was added - commiting all files to repo
+[33m736abcf[m HEAD@{14}: checkout: moving from main to menu
+[33m736abcf[m HEAD@{15}: Branch: renamed refs/heads/main to refs/heads/main
+[33m736abcf[m HEAD@{17}: Branch: renamed refs/heads/master to refs/heads/main
+[33m736abcf[m HEAD@{19}: commit (initial): gravity collisions

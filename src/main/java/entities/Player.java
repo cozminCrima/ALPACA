@@ -21,10 +21,10 @@ import utilz.LoadSave;
 public class Player extends Entity {
 
 
+
   private boolean attacking;
   private float xOffset = 30 * Game.SCALE;
   private float yOffset = 35 * Game.SCALE;
-
 
 //    float x = this.x+(20*Game.SCALE);
 //    float y = this.y+(21*Game.SCALE);
@@ -32,7 +32,9 @@ public class Player extends Entity {
 //    float w = this.width -24*Game.SCALE;
 
   public Player(float x, float y, int width, int height) {
+
     super(x, y, width, height,ColliderTag.Player);
+
     loadAnimations();
   }
 
@@ -44,10 +46,10 @@ public class Player extends Entity {
     setAnimation();
   }
 
-  public void render(Graphics g) {
-    g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset), (int) (y - yOffset), playerDir * width, height,
-        null);
-    drawHitbox(g);
+  public void render(Graphics g, int lvlOffset) {
+    g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset) - lvlOffset, (int) (y - yOffset),
+        playerDir * width, height, null);
+    drawHitbox(g, lvlOffset);
   }
 
   private void checkIfFalling()
@@ -89,11 +91,13 @@ public class Player extends Entity {
           airSpeed = fallSpeedAfterCollision;
         updateXPos(xSpeed);
       }
+
     } 
     else
     {
       updateXPos(xSpeed);
     }
+
     moving = true;
 
   }
@@ -103,8 +107,7 @@ public class Player extends Entity {
       return;
     inAir = true;
     airSpeed = -jumpSpeed;
-    System.out.println(airSpeed);
-
+    // System.out.println(airSpeed);
   }
 
   private void resetInAir() {
@@ -133,28 +136,30 @@ public class Player extends Entity {
         playerAction = IDLE_R;
       }
     } else {
-      if (left) {
-        playerAction = RUNNING_L;
-        lastDir = 0;
-      }
-      if (right) {
-        playerAction = RUNNING_R;
-        lastDir = 1;
+
+      if (inAir) {
+        if (airSpeed < 0 && right) {
+          playerAction = JUMP_R;
+          // lastDir = 0;
+        } else if (airSpeed < 0 && left) {
+          playerAction = JUMP_L;
+          // lastDir = 1;
+        } else if (airSpeed - 1 > 0 && right)
+          playerAction = FALLING_R;
+        else if (airSpeed - 1 > 0 && left)
+          playerAction = FALLING_L;
+
+      } else {
+        if (left && IsEntityOnFloor(collider.getHitbox(), lvlData)) {
+          playerAction = RUNNING_L;
+          lastDir = 0;
+        }
+        if (right && IsEntityOnFloor(collider.getHitbox(), lvlData)) {
+          playerAction = RUNNING_R;
+          lastDir = 1;
+        }
       }
     }
-
-    
-   if(inAir)
-      if(airSpeed < 0 && right) 
-       playerAction = JUMP_R;
-    // else
-     //  playerAction = FALLING_R;
-      if(airSpeed < 0 && left)
-        playerAction = JUMP_L;
-        
-        
-      
-
 
     if (attacking) {
       if (lastDir == 0)
@@ -168,6 +173,7 @@ public class Player extends Entity {
   }
 
   private void resetAniTick() {
+
     aniTick = 0;
     aniIndex = 0;
   }

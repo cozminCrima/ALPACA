@@ -46,8 +46,9 @@ public abstract class Entity implements CollisionEvents {
     collider = new Collider(x,y,37 * Game.SCALE,37 * Game.SCALE,tag,this);
   }
 
-  protected void drawHitbox(Graphics g) {
+  protected void drawHitbox(Graphics g, int lvlOffset) {
     g.setColor(Color.PINK);
+
     collider.drawCollider(g);
   }
   
