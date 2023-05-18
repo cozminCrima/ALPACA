@@ -16,13 +16,13 @@ public class LevelManager {
     level_0 = new Level(LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS));
   }
 
-  public void draw(Graphics g) {
+  public void draw(Graphics g, int lvlOffset) {
     BufferedImage[][] lvlmap = level_0.getLevelMap();
     for (int i = 0; i < lvlmap.length; i++)
       for (int j = 0; j < lvlmap[i].length; j++) {
         BufferedImage tile = null;
         tile = lvlmap[i][j];
-        g.drawImage(tile, j * Game.TILES_SIZE, i * Game.TILES_SIZE, Game.TILES_SIZE, Game.TILES_SIZE, null); // Game.GAME_WIDTH,
+        g.drawImage(tile, j * Game.TILES_SIZE- lvlOffset, i * Game.TILES_SIZE , Game.TILES_SIZE, Game.TILES_SIZE, null); // Game.GAME_WIDTH,
                                                                                                              // Game.GAME_HEIGHT,
                                                                                                              // null);
       }

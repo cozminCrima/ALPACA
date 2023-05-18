@@ -19,18 +19,17 @@ public class Game implements Runnable {
 
   private Playing playing;
   private Menu menu;
-  
+
   public final static int TILES_DEFAULT_SIZE = 38;
   public final static float SCALE = 1.5f;
-  public final static int TILES_WIDTH = 30;
+  public final static int TILES_WIDTH = 24;
   public final static int TILES_HEIGHT = 12;
   public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
   public final static int GAME_WIDTH = TILES_SIZE * TILES_WIDTH;
   public final static int GAME_HEIGHT = TILES_SIZE * TILES_HEIGHT;
 
   private BufferedImage bg = null;
-  
-  
+
   public Game() {
 //    if (bg == null) {
 //     bg = LoadSave.GetSpriteAtlas(LoadSave.BACKGROUND);
@@ -92,41 +91,37 @@ public class Game implements Runnable {
     }
   }
 
-
-
   private void update() {
-    
-    
-    switch(Gamestate.state) {
+
+    switch (Gamestate.state) {
     case MENU:
       menu.update();
       break;
     case PLAYING:
       playing.update();
-    
       break;
+    case OPTIONS:
+    case QUIT:
     default:
+      System.exit(0);
       break;
-    
     }
 
   }
 
   public void render(Graphics g) {
- 
-    
-    switch(Gamestate.state) {
+
+    switch (Gamestate.state) {
     case MENU:
       menu.draw(g);
       break;
     case PLAYING:
       playing.draw(g);
-      
-  
+
       break;
     default:
       break;
-      }
+    }
   }
 
   private void startGameLoop() {
@@ -135,17 +130,16 @@ public class Game implements Runnable {
 
   }
 
- 
   public Menu getMenu() {
     return menu;
   }
-  
+
   public Playing getPlaying() {
     return playing;
   }
-  
+
   public void windowFocusLost() {
-    if(Gamestate.state == Gamestate.PLAYING)
+    if (Gamestate.state == Gamestate.PLAYING)
       playing.getPlayer().resetDirBooleans();
   }
 }

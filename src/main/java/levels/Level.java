@@ -11,8 +11,8 @@ public class Level {
 
   public Level(BufferedImage img) {
     this.lvlSprites = img;
-    int n = (int) (Game.SCALE * (lvlSprites.getHeight()/Game.TILES_SIZE));
-    int m = (int) (Game.SCALE *(lvlSprites.getWidth()/Game.TILES_SIZE));
+    int n = (int) ((lvlSprites.getHeight()/38));
+    int m = (int) ((lvlSprites.getWidth()/38));
     System.out.println("n + m: "+n+" " +m);
     this.lvlData = new int[n][m];
     for (int i = 0; i < n; i++)
