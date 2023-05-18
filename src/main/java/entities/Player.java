@@ -12,28 +12,16 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
+
+import colliders.Collider;
+import colliders.ColliderTag;
 import main.Game;
 import utilz.LoadSave;
 
 public class Player extends Entity {
 
-  private BufferedImage[][] animations;
-  private int aniTick = 0, aniIndex = 0, aniSpeed = 10;
-  private int playerAction = IDLE_R;
-  public int playerDir = 1;
-  private boolean moving = false, attacking = false;
-  private boolean left, up, down, right, jump;
-  private float playerSpeed = 1.1f;
 
-  private float airSpeed = 0f;
-  private float gravity = 0.1f;
-  private float jumpSpeed = 4.3f * Game.SCALE;
-  private float fallSpeedAfterCollision = 0.3f * Game.SCALE;
-  private boolean inAir = true;
-  private int image_direction = 0;
-  int lastDir = 1;
-  int[][] lvlData;
-
+  private boolean attacking;
   private float xOffset = 30 * Game.SCALE;
   private float yOffset = 35 * Game.SCALE;
 
@@ -44,15 +32,14 @@ public class Player extends Entity {
 //    float w = this.width -24*Game.SCALE;
 
   public Player(float x, float y, int width, int height) {
-    super(x, y, width, height);
-    initHitbox(x, y, 37 * Game.SCALE, 37 * Game.SCALE);
+    super(x, y, width, height,ColliderTag.Player);
     loadAnimations();
   }
 
   public void update() {
-
+	checkIfFalling();
     updatePos();
-    updateHitbox();
+    collider.updateHitbox(x,y);
     updateAnimationTick(playerAction);
     setAnimation();
   }
@@ -63,6 +50,14 @@ public class Player extends Entity {
     drawHitbox(g);
   }
 
+  private void checkIfFalling()
+  {
+	  if (!inAir && !IsEntityOnFloor(collider.getHitbox(), lvlData)) {
+	      inAir = true;
+	      // System.out.println("dadadadada");
+	    }
+  }
+  
   private void updatePos() {
     moving = false;
 
@@ -76,32 +71,29 @@ public class Player extends Entity {
 
     if (left)
       xSpeed -= playerSpeed;
-
-    if (right)
+    else if (right)
       xSpeed += playerSpeed;
 
-    if (!inAir && !IsEntityOnFloor(hitbox, lvlData)) {
-      inAir = true;
-      // System.out.println("dadadadada");
-    }
-
+  
     if (inAir) {
 
-      if (canMoveHere(this.hitbox.x, this.hitbox.y + airSpeed, this.hitbox.width, this.hitbox.height, lvlData)) {
+      if (canMoveHere(collider.getHitbox().x, collider.getHitbox().y + airSpeed, collider.getHitbox().width, collider.getHitbox().height, lvlData)) {
         this.y += airSpeed;
         airSpeed += gravity;
         updateXPos(xSpeed);
       } else {
-        hitbox.y = GetEntityYNextToWall(hitbox, airSpeed);
+    	  collider.updateHitbox(collider.getHitbox().x,GetEntityYNextToWall(collider.getHitbox(), airSpeed));
         if (airSpeed > 0)
           resetInAir();
         else
           airSpeed = fallSpeedAfterCollision;
         updateXPos(xSpeed);
       }
-
-    } else
+    } 
+    else
+    {
       updateXPos(xSpeed);
+    }
     moving = true;
 
   }
@@ -122,11 +114,11 @@ public class Player extends Entity {
   }
 
   private void updateXPos(float xSpeed) {
-    if (canMoveHere(this.hitbox.x + xSpeed, this.hitbox.y, this.hitbox.width, this.hitbox.height, lvlData)) {
+    if (canMoveHere(collider.getHitbox().x + xSpeed, collider.getHitbox().y, collider.getHitbox().width, collider.getHitbox().height, lvlData)) {
       // System.out.println("dada");
       this.x += xSpeed;
     } else {
-      this.x = GetEntityXPosNextToWall(this.hitbox, xSpeed);
+      this.x = GetEntityXPosNextToWall(collider.getHitbox(), xSpeed);
     }
   }
 
@@ -257,13 +249,26 @@ public class Player extends Entity {
   public void setAttacking(boolean attacking) {
     this.attacking = attacking;
   }
-
+  
+  public void getDamage(float amount)
+  {
+	  System.out.println("Player is getting damage : "+amount);
+  }
+  
+  
   public void resetDirBooleans() {
     left = false;
     up = false;
     right = false;
     down = false;
     jump = false;
-
   }
+
+  @Override
+  public void OnCollisionEnter(Collider col) {
+	// TODO Auto-generated method stub
+	  getDamage(52);
+  }
+
+
 }
