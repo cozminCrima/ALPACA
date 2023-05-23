@@ -41,12 +41,12 @@ public class Playing extends State implements Statemethods {
     levelManager = new LevelManager(game);
 
     collisionManager = new CollisionManager();
-    player = new Player(200, 200, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE)); // ,(int) (100 * SCALE),(int)
+    player = new Player(200, 200, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE),collisionManager); // ,(int) (100 * SCALE),(int)
                                                                                         // (100 * SCALE));
 
-    enemy = new Enemy(500, 200, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE));
+    enemy = new Enemy(500, 200, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE),collisionManager);
 
-    collisionManager.addCollider(player.getCollider());
+    //collisionManager.addCollider(player.getCollider());
     collisionManager.addCollider(enemy.getCollider());
     
     player.loadLvlData(levelManager.getCurrentLevel().getLvlData());
@@ -80,7 +80,7 @@ public class Playing extends State implements Statemethods {
 
       enemy.setVisible(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(),xLvlOffset));
       
-      System.out.println(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(),xLvlOffset));
+      //System.out.println(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(),xLvlOffset));
       
     } else {
       pauseOverlay.update();

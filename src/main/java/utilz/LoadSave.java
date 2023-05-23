@@ -18,6 +18,7 @@ public class LoadSave {
   public static final String VOL_BUTTONS = "volume_buttons.png";
   public static final String START_BG = "strartscreen1.png";
   public static final String BACKGROUND = "clearskybg.png";
+  public static final String PHLEGM = "phlegm.png";
 
   public static BufferedImage GetSpriteAtlas(String fname) {
     BufferedImage img = null;

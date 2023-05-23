@@ -22,7 +22,7 @@ public class Collider implements CollisionEvents {
 	 * @param width  latimea colliderului
 	 * @param height inaltime colliderului
 	 */
-	public Collider(float x, float y, float width, float height,ColliderTag tag,Entity e) {
+	public Collider(float x, float y, float width, float height,ColliderTag tag,CollisionEvents e) {
 		this.hitbox = new Rectangle2D.Float(x, y, height, width);
 		this.tag = tag;
 		this.e = e;
@@ -35,15 +35,14 @@ public class Collider implements CollisionEvents {
 	/**
 	 * Functie care verifica daca exista coliziune intre 2 entitati
 	 * 
-	 * @param e1 Prima entitate
-	 * @param e2 A doua entitate
+	 * @param c Collider to check collision with
 	 * @return
 	 */
 	public boolean checkForCollision(Collider c) {
 
 		Rectangle2D.Float h_col = c.getHitbox();
-
 		Point2D.Float checkingPoint = new Point2D.Float(hitbox.x, hitbox.y);
+		
 		if (isPointInBoundingBox(checkingPoint, h_col))
 			return true;
 
@@ -142,13 +141,13 @@ public class Collider implements CollisionEvents {
 
 	@Override
 	public void OnCollisionStay(Collider col) {
-		System.out.println("Colliding with "+ col.getTag());
+		//System.out.println("Colliding with "+ col.getTag());
 		e.OnCollisionStay(col);
 	}
 
 	@Override
 	public void OnCollisionExit(Collider col) {
-		System.out.println("Finished colliding with " + col.getTag());
+		//System.out.println("Finished colliding with " + col.getTag());
 		e.OnCollisionExit(col);
 	}
 

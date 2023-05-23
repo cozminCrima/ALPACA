@@ -12,9 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
-
-import colliders.Collider;
-import colliders.ColliderTag;
+import colliders.*;
 import main.Game;
 import utilz.LoadSave;
 
@@ -22,6 +20,8 @@ public class Player extends Entity {
 
 
 
+
+	
   private boolean attacking;
   private float xOffset = 30 * Game.SCALE;
   private float yOffset = 35 * Game.SCALE;
@@ -31,17 +31,19 @@ public class Player extends Entity {
 //    float h = this.height-21*Game.SCALE;
 //    float w = this.width -24*Game.SCALE;
 
-  public Player(float x, float y, int width, int height) {
+  public Player(float x, float y, int width, int height,CollisionManager cm) {
 
-    super(x, y, width, height,ColliderTag.Player);
-
+    super(x, y, width, height,ColliderTag.Player,cm);
+    
     loadAnimations();
+   
   }
 
   public void update() {
 	checkIfFalling();
     updatePos();
     collider.updateHitbox(x,y);
+    super.updateProjectiles(lvlData);
     updateAnimationTick(playerAction);
     setAnimation();
   }
@@ -49,6 +51,7 @@ public class Player extends Entity {
   public void render(Graphics g, int lvlOffset) {
     g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset) - lvlOffset, (int) (y - yOffset),
         playerDir * width, height, null);
+    super.drawProjectiles(g, lvlOffset);
   }
 
   private void checkIfFalling()
@@ -253,6 +256,7 @@ public class Player extends Entity {
 
   public void setAttacking(boolean attacking) {
     this.attacking = attacking;
+    super.shootProjectile(ColliderTag.PlayerProjectile);
   }
   
   public void getDamage(float amount)
@@ -272,7 +276,6 @@ public class Player extends Entity {
   @Override
   public void OnCollisionEnter(Collider col) {
 	// TODO Auto-generated method stub
-	  getDamage(52);
   }
 
 

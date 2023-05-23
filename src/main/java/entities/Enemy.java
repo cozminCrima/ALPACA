@@ -1,5 +1,6 @@
 package entities;
 
+import colliders.*;
 import static utilz.Constants.PlayerConstants.ATTACK_L;
 import static utilz.Constants.PlayerConstants.ATTACK_R;
 import static utilz.Constants.PlayerConstants.GetSpriteAmount;
@@ -28,9 +29,9 @@ public class Enemy extends Entity {
 	private float yOffset = 35 * Game.SCALE;
 	private boolean isVisible = true;
 
-	public Enemy(float x, float y, int width, int height) {
-		super(x, y, width, height,ColliderTag.Enemy);
-	    loadAnimations();
+	public Enemy(float x, float y, int width, int height, CollisionManager cm) {
+		super(x, y, width, height, ColliderTag.Enemy, cm);
+		loadAnimations();
 	}
 
 	public void update() {
@@ -42,9 +43,11 @@ public class Enemy extends Entity {
 	}
 
 	public void render(Graphics g) {
-	    if(isVisible)
-		g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset), (int) (y - yOffset), playerDir * width,
-				height, null);
+		if (isVisible && !super.isDead) {
+			g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset), (int) (y - yOffset), playerDir * width,
+					height, null);
+			collider.drawCollider(g);
+		}
 	}
 
 	private void updatePos() {
@@ -71,12 +74,13 @@ public class Enemy extends Entity {
 
 		if (inAir) {
 
-			if (canMoveHere(collider.getHitbox().x, collider.getHitbox().y + airSpeed, collider.getHitbox().width, collider.getHitbox().height, lvlData)) {
+			if (canMoveHere(collider.getHitbox().x, collider.getHitbox().y + airSpeed, collider.getHitbox().width,
+					collider.getHitbox().height, lvlData)) {
 				this.y += airSpeed;
 				airSpeed += gravity;
 				updateXPos(xSpeed);
 			} else {
-				collider.updateHitbox(collider.getHitbox().x,GetEntityYNextToWall(collider.getHitbox(), airSpeed));
+				collider.updateHitbox(collider.getHitbox().x, GetEntityYNextToWall(collider.getHitbox(), airSpeed));
 				if (airSpeed > 0)
 					resetInAir();
 				else
@@ -106,7 +110,8 @@ public class Enemy extends Entity {
 	}
 
 	private void updateXPos(float xSpeed) {
-		if (canMoveHere(collider.getHitbox().x + xSpeed, collider.getHitbox().y, collider.getHitbox().width, collider.getHitbox().height, lvlData)) {
+		if (canMoveHere(collider.getHitbox().x + xSpeed, collider.getHitbox().y, collider.getHitbox().width,
+				collider.getHitbox().height, lvlData)) {
 			// System.out.println("dada");
 			this.x += xSpeed;
 		} else {
@@ -151,7 +156,6 @@ public class Enemy extends Entity {
 		aniTick = 0;
 		aniIndex = 0;
 	}
-	
 
 	private void updateAnimationTick(int i) {
 
@@ -175,10 +179,10 @@ public class Enemy extends Entity {
 			for (int j = 0; j < animations[i].length; j++)
 				animations[i][j] = img.getSubimage(j * 100, i * 100, 100, 100);
 	}
-	
+
 	public void loadLvlData(int[][] lvlData) {
-		    this.lvlData = lvlData;
-		  }
+		this.lvlData = lvlData;
+	}
 
 	public boolean isLeft() {
 		return left;
@@ -225,9 +229,6 @@ public class Enemy extends Entity {
 	// public boolean isAttacking() {
 //		    return attacking;
 	// }
-	
-	
-
 
 	public void resetDirBooleans() {
 		left = false;
@@ -239,18 +240,26 @@ public class Enemy extends Entity {
 	}
 
 	public boolean isVisible() {
-    return isVisible;
-  }
-
-  public void setVisible(boolean isVisible) {
-    this.isVisible = isVisible;
-  }
-
-  @Override
-	public void OnCollisionEnter(Collider col) {
-		// TODO Auto-generated method stub
-		
+		return isVisible;
 	}
 
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+
+	@Override
+	public void OnCollisionEnter(Collider col) {
+		// TODO Auto-generated method stub
+
+		if (col.getTag() == ColliderTag.PlayerProjectile) {
+			super.getDamage(utilz.Constants.Projectiles.CANNON_BALL_DAMAGE);
+		}
+	}
+	/*
+	 * @Override public void OnCollisionStay(Collider col) {
+	 * System.out.println("muieee"); if(col.getTag() ==
+	 * ColliderTag.PlayerProjectile) {
+	 * super.getDamage(utilz.Constants.Projectiles.CANNON_BALL_DAMAGE); } }
+	 */
 
 }

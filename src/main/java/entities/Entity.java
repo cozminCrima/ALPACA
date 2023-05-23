@@ -8,9 +8,12 @@ import java.awt.Polygon;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import colliders.*;
 
 import main.Game;
+import objects.Projectile;
 
 public abstract class Entity implements CollisionEvents {
 
@@ -34,18 +37,57 @@ public abstract class Entity implements CollisionEvents {
   protected int image_direction = 0;
   protected	int lastDir = 1;
   protected int[][] lvlData;
+  protected int health=100;
+  protected boolean isDead = false;
   
   protected Collider collider;
-  
+  protected ColliderTag tag;
+  private ArrayList<Projectile> projectiles = new ArrayList<>();
+  protected CollisionManager colManager;
 
-  public Entity(float x, float y, int width, int height,ColliderTag tag) {
+  public Entity(float x, float y, int width, int height,ColliderTag tag,CollisionManager cm) {
     this.x = x;
     this.y = y;
     this.height = height;
     this.width = width;
+    this.tag = tag;
+    colManager = cm;
     collider = new Collider(x,y,37 * Game.SCALE,37 * Game.SCALE,tag,this);
   }
 
+  protected void shootProjectile(ColliderTag projectileTag)
+  {
+	  Projectile p = new Projectile((int) (collider.getHitbox().x+37*Game.SCALE), (int) (collider.getHitbox().y-9 * Game.SCALE),lastDir,projectileTag,colManager);
+	  projectiles.add(p);
+	  colManager.addCollider(p.getCollider());
+  }
+  
+  protected void updateProjectiles(int[][] lvlData) {
+		for (Projectile p : projectiles)
+			if (p.isActive()) {
+				p.updatePos();
+			}
+  }
+  
+  protected void drawProjectiles(Graphics g, int lvlOffset)
+  {
+	  for (Projectile p : projectiles)
+			if (p.isActive())
+				p.draw(g, lvlOffset);
+  }
+   
+  protected void getDamage(int amount)
+  {
+	  if(health-amount < 0)
+	  {
+		  isDead = true;
+		  colManager.removeCollider(collider);
+	  }
+	  else
+	  {
+		  health -= amount;
+	  }
+  }
   
   public Collider getCollider()
   {
