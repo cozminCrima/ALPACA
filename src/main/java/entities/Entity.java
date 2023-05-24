@@ -21,10 +21,10 @@ public abstract class Entity implements CollisionEvents {
   protected int width, height;
 
   
-  protected BufferedImage[][] animations;
+
+
   protected int aniTick = 0, aniIndex = 0, aniSpeed = 10;
   protected int playerAction = IDLE_R;
-  protected int playerDir = 1;
   protected boolean moving = false;
   protected boolean left, up, down, right, jump;
   protected float playerSpeed = 1.1f;
@@ -52,12 +52,21 @@ public abstract class Entity implements CollisionEvents {
     this.width = width;
     this.tag = tag;
     colManager = cm;
-    collider = new Collider(x,y,37 * Game.SCALE,37 * Game.SCALE,tag,this);
+    collider = new Collider(x,y,37*Game.SCALE ,37*Game.SCALE,tag,this);
   }
 
   protected void shootProjectile(ColliderTag projectileTag)
   {
-	  Projectile p = new Projectile((int) (collider.getHitbox().x+37*Game.SCALE), (int) (collider.getHitbox().y-9 * Game.SCALE),lastDir,projectileTag,colManager);
+      int dir;
+      if(lastDir == 0)
+      {
+        dir = -1;
+      }
+      else
+      {
+        dir = 1;
+      }
+	  Projectile p = new Projectile((int) (collider.getHitbox().x+lastDir*37*Game.SCALE), (int) (collider.getHitbox().y-9 * Game.SCALE),dir,projectileTag,colManager);
 	  projectiles.add(p);
 	  colManager.addCollider(p.getCollider());
   }
@@ -92,6 +101,15 @@ public abstract class Entity implements CollisionEvents {
   public Collider getCollider()
   {
 	  return collider;
+  }
+  
+  
+  public boolean isDead() {
+    return isDead;
+  }
+
+  public void setDead(boolean isDead) {
+    this.isDead = isDead;
   }
 
 }

@@ -9,10 +9,12 @@ import java.util.List;
 import colliders.Collider;
 import colliders.CollisionManager;
 import entities.Enemy;
+import entities.EnemyType;
 import levels.Level;
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
+import ui.DeathScreen;
 import ui.PauseOverlay;
 import utilz.*;
 
@@ -24,10 +26,12 @@ public class Playing extends State implements Statemethods {
 
   private Player player;
   private Enemy enemy;
+  private Enemy enemy2;
   private CollisionManager collisionManager;
   private LevelManager levelManager;
   private BufferedImage bg = null;
   private PauseOverlay pauseOverlay;
+  private DeathScreen deathScreen;
   private boolean paused = false;
 
   private int xLvlOffset;
@@ -41,26 +45,32 @@ public class Playing extends State implements Statemethods {
     levelManager = new LevelManager(game);
 
     collisionManager = new CollisionManager();
-    player = new Player(200, 200, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE),collisionManager); // ,(int) (100 * SCALE),(int)
-                                                                                        // (100 * SCALE));
+    player = new Player(200, 200, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager); // ,(int) (100
+                                                                                                         // *
+                                                                                                         // SCALE),(int)
+    // (100 * SCALE));
 
-    enemy = new Enemy(500, 200, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE),collisionManager);
+    enemy = new Enemy(1500, 100, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager, EnemyType.Cactus,
+        player);
+    enemy2 = new Enemy(900, 100, (int) (65 * Game.SCALE), (int) (42 * Game.SCALE), collisionManager, EnemyType.Cannon,
+        player);
 
-    //collisionManager.addCollider(player.getCollider());
+    collisionManager.addCollider(player.getCollider());
     collisionManager.addCollider(enemy.getCollider());
-    
+    collisionManager.addCollider(enemy2.getCollider());
     player.loadLvlData(levelManager.getCurrentLevel().getLvlData());
     enemy.loadLvlData(levelManager.getCurrentLevel().getLvlData());
+    enemy2.loadLvlData(levelManager.getCurrentLevel().getLvlData());
     if (bg == null) {
       bg = LoadSave.GetSpriteAtlas(LoadSave.BACKGROUND);
     }
 
     pauseOverlay = new PauseOverlay(this);
+    deathScreen = new DeathScreen(this);
   }
 
   public void windowFocusLost() {
     player.resetDirBooleans();
-    enemy.resetDirBooleans();
   }
 
   public Player getPlayer() {
@@ -70,18 +80,20 @@ public class Playing extends State implements Statemethods {
   @Override
   public void update() {
 
-    if (!paused) {
+    if (!paused && !player.isDead()) {
+
       checkCloseToBorder();
       levelManager.update();
       player.update();
       enemy.update();
+      enemy2.update();
       collisionManager.updateColliders();
-      
 
-      enemy.setVisible(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(),xLvlOffset));
-      
-      //System.out.println(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(),xLvlOffset));
-      
+      enemy.setVisible(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(), xLvlOffset));
+      enemy2.setVisible(HelpMethods.IsInFOV(enemy2.getCollider().getHitbox(), xLvlOffset));
+
+      // System.out.println(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(),xLvlOffset));
+
     } else {
       pauseOverlay.update();
     }
@@ -111,10 +123,16 @@ public class Playing extends State implements Statemethods {
 
   @Override
   public void draw(Graphics g) {
-    g.drawImage(bg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
-    levelManager.draw(g, xLvlOffset);
-    player.render(g, xLvlOffset);
-    enemy.render(g);
+    if (player.isDead()) {
+      deathScreen.draw(g);
+    } else {
+
+      g.drawImage(bg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+      levelManager.draw(g, xLvlOffset);
+      player.render(g, xLvlOffset);
+      enemy.render(g, xLvlOffset);
+      enemy2.render(g, xLvlOffset);
+    }
     if (paused)
       pauseOverlay.draw(g);
 
@@ -178,25 +196,23 @@ public class Playing extends State implements Statemethods {
 
   }
 
+  @Override
+  public void keyReleased(KeyEvent e) {
+    switch (e.getKeyCode()) {
+    case KeyEvent.VK_UP:
+      player.setJump(false);
+      break;
+    case KeyEvent.VK_LEFT:
+      player.setLeft(false);
+      break;
+    case KeyEvent.VK_DOWN:
+      player.setDown(false);
+      break;
+    case KeyEvent.VK_RIGHT:
+      player.setRight(false);
+      break;
 
+    }
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		switch (e.getKeyCode()) {
-		case KeyEvent.VK_UP:
-			player.setJump(false);
-			break;
-		case KeyEvent.VK_LEFT:
-			player.setLeft(false);
-			break;
-		case KeyEvent.VK_DOWN:
-			player.setDown(false);
-			break;
-		case KeyEvent.VK_RIGHT:
-			player.setRight(false);
-			break;
-
-		}
-
-	}
+  }
 }

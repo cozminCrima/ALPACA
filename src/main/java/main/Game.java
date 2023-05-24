@@ -142,4 +142,5 @@ public class Game implements Runnable {
     if (Gamestate.state == Gamestate.PLAYING)
       playing.getPlayer().resetDirBooleans();
   }
+  
 }

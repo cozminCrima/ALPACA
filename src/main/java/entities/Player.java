@@ -21,7 +21,7 @@ public class Player extends Entity {
 
 
 
-	
+  private BufferedImage[][] animations;
   private boolean attacking;
   private float xOffset = 30 * Game.SCALE;
   private float yOffset = 35 * Game.SCALE;
@@ -41,6 +41,7 @@ public class Player extends Entity {
 
   public void update() {
 	checkIfFalling();
+	checkIfInTrap();
     updatePos();
     collider.updateHitbox(x,y);
     super.updateProjectiles(lvlData);
@@ -50,8 +51,11 @@ public class Player extends Entity {
 
   public void render(Graphics g, int lvlOffset) {
     g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset) - lvlOffset, (int) (y - yOffset),
-        playerDir * width, height, null);
+          width, height, null);
+
     super.drawProjectiles(g, lvlOffset);
+    
+    collider.drawCollider(g);
   }
 
   private void checkIfFalling()
@@ -60,6 +64,15 @@ public class Player extends Entity {
 	      inAir = true;
 	      // System.out.println("dadadadada");
 	    }
+  }
+
+  private void checkIfInTrap()
+  {
+    if(y>625)
+    {
+      isDead = true;
+    }
+    System.out.println(isDead);
   }
   
   private void updatePos() {
@@ -276,6 +289,11 @@ public class Player extends Entity {
   @Override
   public void OnCollisionEnter(Collider col) {
 	// TODO Auto-generated method stub
+    if(col.getTag() != ColliderTag.PlayerProjectile)
+    {
+      isDead = true;
+    }
+    
   }
 
 

@@ -4,8 +4,8 @@ import main.Game;
 
 public class Constants {
 	public static class Projectiles {
-		public static final int CANNON_BALL_DEFAULT_WIDTH = 20;
-		public static final int CANNON_BALL_DEFAULT_HEIGHT = 20;
+		public static final int CANNON_BALL_DEFAULT_WIDTH = 10;
+		public static final int CANNON_BALL_DEFAULT_HEIGHT = 5;
 		public static final int CANNON_BALL_DAMAGE = 125;
 		
 		public static final int CANNON_BALL_WIDTH = (int) (Game.SCALE * CANNON_BALL_DEFAULT_WIDTH);
