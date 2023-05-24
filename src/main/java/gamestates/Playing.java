@@ -16,6 +16,7 @@ import levels.LevelManager;
 import main.Game;
 import ui.DeathScreen;
 import ui.PauseOverlay;
+import ui.LevelCompletedOverlay;
 import utilz.*;
 
 public class Playing extends State implements Statemethods {
@@ -32,7 +33,9 @@ public class Playing extends State implements Statemethods {
   private BufferedImage bg = null;
   private PauseOverlay pauseOverlay;
   private DeathScreen deathScreen;
+  private LevelCompletedOverlay levelCompletedOverlay;
   private boolean paused = false;
+  private boolean finished = false;
 
   private int xLvlOffset;
   private int leftBorder = (int) (0.3 * Game.GAME_WIDTH);
@@ -56,8 +59,8 @@ public class Playing extends State implements Statemethods {
         player);
 
     collisionManager.addCollider(player.getCollider());
-    collisionManager.addCollider(enemy.getCollider());
-    collisionManager.addCollider(enemy2.getCollider());
+    //collisionManager.addCollider(enemy.getCollider());
+    //collisionManager.addCollider(enemy2.getCollider());
     player.loadLvlData(levelManager.getCurrentLevel().getLvlData());
     enemy.loadLvlData(levelManager.getCurrentLevel().getLvlData());
     enemy2.loadLvlData(levelManager.getCurrentLevel().getLvlData());
@@ -67,6 +70,7 @@ public class Playing extends State implements Statemethods {
 
     pauseOverlay = new PauseOverlay(this);
     deathScreen = new DeathScreen(this);
+    levelCompletedOverlay = new LevelCompletedOverlay(this);
   }
 
   public void windowFocusLost() {
@@ -80,8 +84,9 @@ public class Playing extends State implements Statemethods {
   @Override
   public void update() {
 
-    if (!paused && !player.isDead()) {
+    if (!paused && !finished && !player.isDead()) {
 
+      checkFinish();
       checkCloseToBorder();
       levelManager.update();
       player.update();
@@ -94,10 +99,18 @@ public class Playing extends State implements Statemethods {
 
       // System.out.println(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(),xLvlOffset));
 
-    } else {
+    } else if (paused) {
       pauseOverlay.update();
+    } else if (finished) {
+
     }
 
+  }
+
+  private void checkFinish() {
+    if (player.getCollider().getHitbox().x > 5400) {
+      finished = true;
+    }
   }
 
   public void unpauseGame() {
@@ -135,8 +148,11 @@ public class Playing extends State implements Statemethods {
     }
     if (paused)
       pauseOverlay.draw(g);
+    if (finished)
+      levelCompletedOverlay.draw(g);
 
   }
+  
 
   public void mouseDragged(MouseEvent e) {
     if (paused)

@@ -10,6 +10,7 @@ import static utilz.Constants.PlayerConstants.JUMP_L;
 import static utilz.Constants.PlayerConstants.JUMP_R;
 import static utilz.Constants.PlayerConstants.RUNNING_L;
 import static utilz.Constants.PlayerConstants.RUNNING_R;
+import static utilz.Constants.Projectiles.*;
 import static utilz.HelpMethods.GetEntityXPosNextToWall;
 import static utilz.HelpMethods.GetEntityYNextToWall;
 import static utilz.HelpMethods.IsEntityOnFloor;
@@ -18,6 +19,8 @@ import static utilz.HelpMethods.canMoveHere;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import colliders.Collider;
 import colliders.ColliderTag;
@@ -33,53 +36,81 @@ public class Enemy extends Entity {
   private EnemyType type;
   private int enemyDir;
   private Player player;
+  private boolean isShooting;
 
-  public Enemy(float x, float y, int width, int height, CollisionManager cm,EnemyType type, Player player) {
+  public Enemy(float x, float y, int width, int height, CollisionManager cm, EnemyType type, Player player) {
     super(x, y, width, height, ColliderTag.Enemy, cm);
     this.type = type;
     this.player = player;
+    this.aniSpeed = 25;
     loadAnimations();
   }
-  
+
   public void updateOrientation() {
     int lastDir = enemyDir;
-    
-   if(this.x>player.getCollider().getHitbox().x)
-   {
-     enemyDir=0;
-   }
-   else
-   {
-     enemyDir=1;
+
+    if (this.x > player.getCollider().getHitbox().x) {
+      enemyDir = 0;
+    } else {
+      enemyDir = 1;
+    }
+    if (lastDir != enemyDir)
+      resetAniTick();
+
   }
-   if(lastDir != enemyDir)
-     resetAniTick();
-     
-}
-  
 
   public void update() {
-    if(type == EnemyType.Cannon)
+    if (type == EnemyType.Cannon) {
+      this.lastDir = enemyDir;
+      int dir;
+      if (aniIndex == 3 && !isShooting) {
+        isShooting = true;
+
+        if (lastDir == 0) {
+          dir = -1;
+        } else {
+          dir = 1;
+        }
+        super.shootProjectile(ColliderTag.Projectile, (int) (collider.getHitbox().x + dir * 25 * Game.SCALE),
+            (int) (collider.getHitbox().y + 10 * Game.SCALE), CANNON_BALL_DEFAULT_WIDTH, CANNON_BALL_DEFAULT_HEIGHT,
+            LoadSave.BALL);
+        Timer animationTimer = new Timer();
+        animationTimer.schedule(new TimerTask() {
+          @Override
+          public void run() {
+            isShooting = false;
+          }
+        }, 1500);
+      }
+
       updateOrientation();
+      super.updateProjectiles(lvlData);
+      super.disableNotVisibleProjectiles();
+
+    }
     updatePos();
     collider.updateHitbox(x, y);
     updateAnimationTick(playerAction);
 
-  
   }
 
   public void render(Graphics g, int lvlOffset) {
+    this.lvlOffset = lvlOffset;
+    super.drawProjectiles(g, lvlOffset);
     if (isVisible && !super.isDead) {
-      if(type == EnemyType.Cactus)
-      {
-        g.drawImage(animations[0][aniIndex], (int) (x - xOffset) - lvlOffset, (int) (y - yOffset),width,height, null);
-        
+      if (type == EnemyType.Cactus) {
+        g.drawImage(animations[0][aniIndex], (int) (x - xOffset) - lvlOffset, (int) (y - yOffset), width, height, null);
+
+      } else {
+        if (isShooting) {
+          g.drawImage(animations[enemyDir][3], (int) (x - 0.5 * xOffset) - lvlOffset, (int) (y), width, height, null);
+        } else {
+          g.drawImage(animations[enemyDir][aniIndex], (int) (x - 0.5 * xOffset) - lvlOffset, (int) (y), width, height,
+              null);
+        }
+
       }
-      else
-      {
-        g.drawImage(animations[enemyDir][aniIndex], (int) (x - 0.5*xOffset) - lvlOffset, (int) (y),width,height, null);
-      }
-      
+
       collider.drawCollider(g);
     }
   }
@@ -87,12 +118,11 @@ public class Enemy extends Entity {
   private void updatePos() {
     moving = false;
 
-
     if (!inAir && !IsEntityOnFloor(collider.getHitbox(), lvlData)) {
       inAir = true;
       // System.out.println("dadadadada");
     }
-   
+
     if (inAir) {
 
       if (canMoveHere(collider.getHitbox().x, collider.getHitbox().y + airSpeed, collider.getHitbox().width,
@@ -106,18 +136,14 @@ public class Enemy extends Entity {
           resetInAir();
         else
           airSpeed = fallSpeedAfterCollision;
-        
+
       }
 
-    } 
+    }
 
     moving = true;
 
   }
-
-
-
-  
 
   private void resetInAir() {
     inAir = false;
@@ -132,7 +158,7 @@ public class Enemy extends Entity {
 
   private void updateAnimationTick(int i) {
     int aniLength = 0;
-    if(type == EnemyType.Cactus)
+    if (type == EnemyType.Cactus)
       aniLength = 12;
     else
       aniLength = 7;
@@ -169,12 +195,9 @@ public class Enemy extends Entity {
     this.lvlData = lvlData;
   }
 
- 
   // public boolean isAttacking() {
 //		    return attacking;
   // }
-
-  
 
   public boolean isVisible() {
     return isVisible;
@@ -193,4 +216,3 @@ public class Enemy extends Entity {
     }
   }
 }
-  

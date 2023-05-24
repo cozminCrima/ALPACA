@@ -7,6 +7,8 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 public class LoadSave {
+  public static final String COMPLETED_IMG = "completed_sprite.png";
+  public static final String BALL= "ball.png";
   public static final String DEATH_SCREEN="death_screen2.png";
   public static final String CACTUS="cactus.png";
   public static final String CANNON="canon_atlas.png";

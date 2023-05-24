@@ -5,6 +5,7 @@ import static utilz.Constants.Directions.LEFT;
 import static utilz.Constants.Directions.RIGHT;
 import static utilz.Constants.Directions.UP;
 import static utilz.Constants.PlayerConstants.*;
+import static utilz.Constants.Projectiles.*;
 import static utilz.HelpMethods.*;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D.Float;
@@ -48,8 +49,11 @@ public class Player extends Entity {
     updateAnimationTick(playerAction);
     setAnimation();
   }
+  
+
 
   public void render(Graphics g, int lvlOffset) {
+    this.lvlOffset = lvlOffset;
     g.drawImage(animations[playerAction][aniIndex], (int) (x - xOffset) - lvlOffset, (int) (y - yOffset),
           width, height, null);
 
@@ -72,7 +76,7 @@ public class Player extends Entity {
     {
       isDead = true;
     }
-    System.out.println(isDead);
+
   }
   
   private void updatePos() {
@@ -269,7 +273,8 @@ public class Player extends Entity {
 
   public void setAttacking(boolean attacking) {
     this.attacking = attacking;
-    super.shootProjectile(ColliderTag.PlayerProjectile);
+    super.shootProjectile(ColliderTag.PlayerProjectile,(int) (collider.getHitbox().x+lastDir*37*Game.SCALE),(int) (collider.getHitbox().y-9 * Game.SCALE),
+        PHLEGM_DEFAULT_WIDTH,PHLEGM_DEFAULT_HEIGHT,LoadSave.PHLEGM);
   }
   
   public void getDamage(float amount)

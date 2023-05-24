@@ -14,6 +14,7 @@ import colliders.*;
 
 import main.Game;
 import objects.Projectile;
+import utilz.HelpMethods;
 
 public abstract class Entity implements CollisionEvents {
 
@@ -31,7 +32,7 @@ public abstract class Entity implements CollisionEvents {
 
   protected float airSpeed = 0f;
   protected float gravity = 0.1f;
-  protected float jumpSpeed = 4.3f * Game.SCALE;
+  protected float jumpSpeed = 5f * Game.SCALE;
   protected float fallSpeedAfterCollision = 0.3f * Game.SCALE;
   protected boolean inAir = true;
   protected int image_direction = 0;
@@ -39,6 +40,7 @@ public abstract class Entity implements CollisionEvents {
   protected int[][] lvlData;
   protected int health=100;
   protected boolean isDead = false;
+  protected int lvlOffset;
   
   protected Collider collider;
   protected ColliderTag tag;
@@ -55,7 +57,7 @@ public abstract class Entity implements CollisionEvents {
     collider = new Collider(x,y,37*Game.SCALE ,37*Game.SCALE,tag,this);
   }
 
-  protected void shootProjectile(ColliderTag projectileTag)
+  protected void shootProjectile(ColliderTag projectileTag,int x,int y,int width,int height,String pathName)
   {
       int dir;
       if(lastDir == 0)
@@ -66,7 +68,7 @@ public abstract class Entity implements CollisionEvents {
       {
         dir = 1;
       }
-	  Projectile p = new Projectile((int) (collider.getHitbox().x+lastDir*37*Game.SCALE), (int) (collider.getHitbox().y-9 * Game.SCALE),dir,projectileTag,colManager);
+	  Projectile p = new Projectile(x, y,width,height,dir,projectileTag,colManager,pathName);
 	  projectiles.add(p);
 	  colManager.addCollider(p.getCollider());
   }
@@ -83,6 +85,12 @@ public abstract class Entity implements CollisionEvents {
 	  for (Projectile p : projectiles)
 			if (p.isActive())
 				p.draw(g, lvlOffset);
+  }
+  
+  protected void disableNotVisibleProjectiles()
+  {
+    for (Projectile p : projectiles)
+      p.setActive(HelpMethods.IsInFOV(p.getCollider().getHitbox(),lvlOffset));
   }
    
   protected void getDamage(int amount)

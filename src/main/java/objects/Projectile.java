@@ -18,11 +18,11 @@ public class Projectile implements CollisionEvents {
 	private BufferedImage img;
 	private CollisionManager cm;
 
-	public Projectile(int x, int y, int dir, ColliderTag tag,CollisionManager cm) {
-		col = new Collider(x, y, CANNON_BALL_WIDTH, CANNON_BALL_HEIGHT, tag, this);
+	public Projectile(int x, int y,int width,int height, int dir, ColliderTag tag,CollisionManager cm,String pathName) {
+		col = new Collider(x, y, width, height, tag, this);
 		this.dir = dir;
 		this.cm = cm;
-		img = LoadSave.GetSpriteAtlas(LoadSave.PHLEGM);
+		img = LoadSave.GetSpriteAtlas(pathName);
 	}
 
 	public void updatePos() {
@@ -44,6 +44,10 @@ public class Projectile implements CollisionEvents {
 
 	public void setActive(boolean active) {
 		this.active = active;
+		if(active == false)
+		{
+		  cm.removeCollider(this.col);
+		}
 	}
 
 	public boolean isActive() {
