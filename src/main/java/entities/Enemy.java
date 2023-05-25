@@ -80,7 +80,7 @@ public class Enemy extends Entity {
           public void run() {
             isShooting = false;
           }
-        }, 1500);
+        }, 3000);
       }
 
       updateOrientation();

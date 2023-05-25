@@ -26,7 +26,7 @@ public class Projectile implements CollisionEvents {
 	}
 
 	public void updatePos() {
-		col.updateHitbox(col.getHitbox().x + dir * SPEED, col.getHitbox().y);
+		col.updateHitbox((int)(col.getHitbox().x + dir * SPEED*1.2), col.getHitbox().y);
 	}
 
 	public void draw(Graphics g, int xLvlOffset) {
