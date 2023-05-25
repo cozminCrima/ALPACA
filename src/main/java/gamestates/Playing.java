@@ -26,8 +26,8 @@ public class Playing extends State implements Statemethods {
   }
 
   private Player player;
-  private Enemy enemy;
-  private Enemy enemy2;
+  private Enemy cactus1,cactus2,cactus3;
+  private Enemy cannon1,cannon2,cannon3;
   private CollisionManager collisionManager;
   private LevelManager levelManager;
   private BufferedImage bg = null;
@@ -53,17 +53,32 @@ public class Playing extends State implements Statemethods {
                                                                                                          // SCALE),(int)
     // (100 * SCALE));
 
-    enemy = new Enemy(1500, 100, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager, EnemyType.Cactus,
+    cactus1 = new Enemy(400, 100, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager, EnemyType.Cactus,
         player);
-    enemy2 = new Enemy(900, 100, (int) (65 * Game.SCALE), (int) (42 * Game.SCALE), collisionManager, EnemyType.Cannon,
+    cactus2 = new Enemy(3935, 100, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager, EnemyType.Cactus,
+        player);
+    cactus3 = new Enemy(4190, 100, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager, EnemyType.Cactus,
+        player);
+    cannon1 = new Enemy(3495, 100, (int) (65 * Game.SCALE), (int) (42 * Game.SCALE), collisionManager, EnemyType.Cannon,
+        player);
+    cannon2 = new Enemy(5500, 100, (int) (65 * Game.SCALE), (int) (42 * Game.SCALE), collisionManager, EnemyType.Cannon,
+        player);
+    cannon3 = new Enemy(1400, 100, (int) (65 * Game.SCALE), (int) (42 * Game.SCALE), collisionManager, EnemyType.Cannon,
         player);
 
     collisionManager.addCollider(player.getCollider());
+    collisionManager.addCollider(cactus1.getCollider());
+    collisionManager.addCollider(cactus2.getCollider());
+    collisionManager.addCollider(cactus3.getCollider());
     //collisionManager.addCollider(enemy.getCollider());
     //collisionManager.addCollider(enemy2.getCollider());
     player.loadLvlData(levelManager.getCurrentLevel().getLvlData());
-    enemy.loadLvlData(levelManager.getCurrentLevel().getLvlData());
-    enemy2.loadLvlData(levelManager.getCurrentLevel().getLvlData());
+    cactus1.loadLvlData(levelManager.getCurrentLevel().getLvlData());
+    cactus2.loadLvlData(levelManager.getCurrentLevel().getLvlData());
+    cactus3.loadLvlData(levelManager.getCurrentLevel().getLvlData());
+    cannon1.loadLvlData(levelManager.getCurrentLevel().getLvlData());
+    cannon2.loadLvlData(levelManager.getCurrentLevel().getLvlData());
+    cannon3.loadLvlData(levelManager.getCurrentLevel().getLvlData());
     if (bg == null) {
       bg = LoadSave.GetSpriteAtlas(LoadSave.BACKGROUND);
     }
@@ -90,12 +105,20 @@ public class Playing extends State implements Statemethods {
       checkCloseToBorder();
       levelManager.update();
       player.update();
-      enemy.update();
-      enemy2.update();
+      cactus1.update();
+      cactus2.update();
+      cactus3.update();
+      cannon1.update();
+      cannon2.update();
+      cannon3.update();
       collisionManager.updateColliders();
 
-      enemy.setVisible(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(), xLvlOffset));
-      enemy2.setVisible(HelpMethods.IsInFOV(enemy2.getCollider().getHitbox(), xLvlOffset));
+      cactus1.setVisible(HelpMethods.IsInFOV(cactus1.getCollider().getHitbox(), xLvlOffset));
+      cactus2.setVisible(HelpMethods.IsInFOV(cactus2.getCollider().getHitbox(), xLvlOffset));
+      cactus3.setVisible(HelpMethods.IsInFOV(cactus3.getCollider().getHitbox(), xLvlOffset));
+      cannon1.setVisible(HelpMethods.IsInFOV(cannon1.getCollider().getHitbox(), xLvlOffset));
+      cannon2.setVisible(HelpMethods.IsInFOV(cannon2.getCollider().getHitbox(), xLvlOffset));
+      cannon3.setVisible(HelpMethods.IsInFOV(cannon3.getCollider().getHitbox(), xLvlOffset));
 
       // System.out.println(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(),xLvlOffset));
 
@@ -143,8 +166,12 @@ public class Playing extends State implements Statemethods {
       g.drawImage(bg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
       levelManager.draw(g, xLvlOffset);
       player.render(g, xLvlOffset);
-      enemy.render(g, xLvlOffset);
-      enemy2.render(g, xLvlOffset);
+      cactus1.render(g, xLvlOffset);
+      cactus2.render(g, xLvlOffset);
+      cactus3.render(g, xLvlOffset);
+      cannon1.render(g, xLvlOffset);
+      cannon2.render(g, xLvlOffset);
+      cannon3.render(g, xLvlOffset);
     }
     if (paused)
       pauseOverlay.draw(g);

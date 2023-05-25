@@ -41,6 +41,7 @@ public class Player extends Entity {
   }
 
   public void update() {
+    System.out.println(x);
 	checkIfFalling();
 	checkIfInTrap();
     updatePos();
@@ -274,7 +275,7 @@ public class Player extends Entity {
   public void setAttacking(boolean attacking) {
     this.attacking = attacking;
     super.shootProjectile(ColliderTag.PlayerProjectile,(int) (collider.getHitbox().x+lastDir*37*Game.SCALE),(int) (collider.getHitbox().y-9 * Game.SCALE),
-        PHLEGM_DEFAULT_WIDTH,PHLEGM_DEFAULT_HEIGHT,LoadSave.PHLEGM);
+        (int)(PHLEGM_DEFAULT_WIDTH*Game.SCALE),(int)(PHLEGM_DEFAULT_HEIGHT*Game.SCALE),LoadSave.PHLEGM);
   }
   
   public void getDamage(float amount)

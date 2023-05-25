@@ -72,7 +72,7 @@ public class Enemy extends Entity {
           dir = 1;
         }
         super.shootProjectile(ColliderTag.Projectile, (int) (collider.getHitbox().x + dir * 25 * Game.SCALE),
-            (int) (collider.getHitbox().y + 10 * Game.SCALE), CANNON_BALL_DEFAULT_WIDTH, CANNON_BALL_DEFAULT_HEIGHT,
+            (int) (collider.getHitbox().y + 10 * Game.SCALE), (int)(CANNON_BALL_DEFAULT_WIDTH*Game.SCALE),(int)( CANNON_BALL_DEFAULT_HEIGHT*Game.SCALE),
             LoadSave.BALL);
         Timer animationTimer = new Timer();
         animationTimer.schedule(new TimerTask() {

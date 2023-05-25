@@ -29,7 +29,7 @@ public class Collider implements CollisionEvents {
 	}
 
 	public void drawCollider(Graphics g) {
-		g.drawRect((int) hitbox.x, (int) hitbox.y, (int) hitbox.width, (int) hitbox.height);
+		//g.drawRect((int) hitbox.x, (int) hitbox.y, (int) hitbox.width, (int) hitbox.height);
 	}
 
 	/**
