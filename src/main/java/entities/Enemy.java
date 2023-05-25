@@ -27,6 +27,9 @@ import colliders.ColliderTag;
 import main.Game;
 import utilz.LoadSave;
 
+/**
+ * Clasa Enemy reprezintă o entitate inamică din joc.
+ */
 public class Enemy extends Entity {
 
   protected BufferedImage[][] animations;
@@ -38,6 +41,17 @@ public class Enemy extends Entity {
   private Player player;
   private boolean isShooting;
 
+  /**
+   * Constructor pentru clasa Enemy.
+   * 
+   * @param x      poziția pe axa x a entității
+   * @param y      poziția pe axa y a entității
+   * @param width  lățimea entității
+   * @param height înălțimea entității
+   * @param cm     managerul de coliziuni
+   * @param type   tipul inamicului
+   * @param player jucătorul
+   */
   public Enemy(float x, float y, int width, int height, CollisionManager cm, EnemyType type, Player player) {
     super(x, y, width, height, ColliderTag.Enemy, cm);
     this.type = type;
@@ -46,6 +60,9 @@ public class Enemy extends Entity {
     loadAnimations();
   }
 
+  /**
+   * Actualizează orientarea inamicului în funcție de poziția jucătorului.
+   */
   public void updateOrientation() {
     int lastDir = enemyDir;
 
@@ -59,6 +76,9 @@ public class Enemy extends Entity {
 
   }
 
+  /**
+   * Actualizează starea inamicului.
+   */
   public void update() {
     if (type == EnemyType.Cannon) {
       this.lastDir = enemyDir;
@@ -72,8 +92,8 @@ public class Enemy extends Entity {
           dir = 1;
         }
         super.shootProjectile(ColliderTag.Projectile, (int) (collider.getHitbox().x + dir * 25 * Game.SCALE),
-            (int) (collider.getHitbox().y + 10 * Game.SCALE), (int)(CANNON_BALL_DEFAULT_WIDTH*Game.SCALE),(int)( CANNON_BALL_DEFAULT_HEIGHT*Game.SCALE),
-            LoadSave.BALL);
+            (int) (collider.getHitbox().y + 10 * Game.SCALE), (int) (CANNON_BALL_DEFAULT_WIDTH * Game.SCALE),
+            (int) (CANNON_BALL_DEFAULT_HEIGHT * Game.SCALE), LoadSave.BALL);
         Timer animationTimer = new Timer();
         animationTimer.schedule(new TimerTask() {
           @Override
@@ -94,6 +114,12 @@ public class Enemy extends Entity {
 
   }
 
+  /**
+   * Desenează inamicul pe ecran.
+   * 
+   * @param g         contextul grafic
+   * @param lvlOffset compensarea nivelului
+   */
   public void render(Graphics g, int lvlOffset) {
     this.lvlOffset = lvlOffset;
     super.drawProjectiles(g, lvlOffset);
@@ -115,47 +141,54 @@ public class Enemy extends Entity {
     }
   }
 
+  /**
+   * Actualizează poziția inamicului.
+   */
   private void updatePos() {
     moving = false;
 
     if (!inAir && !IsEntityOnFloor(collider.getHitbox(), lvlData)) {
       inAir = true;
-      // System.out.println("dadadadada");
     }
 
     if (inAir) {
-
       if (canMoveHere(collider.getHitbox().x, collider.getHitbox().y + airSpeed, collider.getHitbox().width,
           collider.getHitbox().height, lvlData)) {
         this.y += airSpeed;
         airSpeed += gravity;
-
       } else {
         collider.updateHitbox(collider.getHitbox().x, GetEntityYNextToWall(collider.getHitbox(), airSpeed));
         if (airSpeed > 0)
           resetInAir();
         else
           airSpeed = fallSpeedAfterCollision;
-
       }
-
     }
 
     moving = true;
-
   }
 
+  /**
+   * Resetează starea de "în aer" a inamicului.
+   */
   private void resetInAir() {
     inAir = false;
     airSpeed = 0;
-
   }
 
+  /**
+   * Resetează numărul de tick-uri al animației.
+   */
   private void resetAniTick() {
     aniTick = 0;
     aniIndex = 0;
   }
 
+  /**
+   * Actualizează tick-ul animației.
+   *
+   * @param i index-ul animației
+   */
   private void updateAnimationTick(int i) {
     int aniLength = 0;
     if (type == EnemyType.Cactus)
@@ -166,15 +199,16 @@ public class Enemy extends Entity {
     if (aniTick >= aniSpeed) {
       aniTick = 0;
       aniIndex++;
-      if (aniIndex >= aniLength)// animations[i].length)
-      {
+      if (aniIndex >= aniLength) {
         aniIndex = 0;
       }
     }
   }
 
+  /**
+   * Încarcă animațiile inamicului.
+   */
   protected void loadAnimations() {
-
     if (type == EnemyType.Cactus) {
       BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.CACTUS);
 
@@ -191,28 +225,44 @@ public class Enemy extends Entity {
     }
   }
 
+  /**
+   * Încarcă datele nivelului.
+   *
+   * @param lvlData datele nivelului
+   */
   public void loadLvlData(int[][] lvlData) {
     this.lvlData = lvlData;
   }
 
-  // public boolean isAttacking() {
-//		    return attacking;
-  // }
-
+  /**
+   * Verifică dacă inamicul este vizibil.
+   *
+   * @return true dacă inamicul este vizibil, false în caz contrar
+   */
   public boolean isVisible() {
     return isVisible;
   }
 
+  /**
+   * Setează vizibilitatea inamicului.
+   *
+   * @param isVisible vizibilitatea inamicului
+   */
   public void setVisible(boolean isVisible) {
     this.isVisible = isVisible;
   }
 
+  /**
+   * Implementare a metodei OnCollisionEnter pentru gestionarea coliziunii
+   * inamicului cu alte obiecte.
+   *
+   * @param col collider-ul cu care a avut loc coliziunea
+   */
   @Override
   public void OnCollisionEnter(Collider col) {
-    // TODO Auto-generated method stub
-
     if (col.getTag() == ColliderTag.PlayerProjectile) {
       super.getDamage(utilz.Constants.Projectiles.CANNON_BALL_DAMAGE);
     }
   }
+
 }

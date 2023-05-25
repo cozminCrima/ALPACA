@@ -10,6 +10,11 @@ import gamestates.Playing;
 import levels.LevelManager;
 import utilz.LoadSave;
 
+/**
+ * 
+ * Clasa principală a jocului, responsabilă de gestionarea stării jocului,
+ * desenarea și actualizarea jocului.
+ */
 public class Game implements Runnable {
   private GameWindow gameWindow;
   private GamePanel gamePanel;
@@ -30,6 +35,11 @@ public class Game implements Runnable {
 
   private BufferedImage bg = null;
 
+  /**
+   * 
+   * Constructor pentru obiectul Game. Inițializează clasele necesare și începe
+   * bucla de joc.
+   */
   public Game() {
 //    if (bg == null) {
 //     bg = LoadSave.GetSpriteAtlas(LoadSave.BACKGROUND);
@@ -42,11 +52,19 @@ public class Game implements Runnable {
 
   }
 
+  /**
+   * 
+   * Inițializează clasele Menu și Playing.
+   */
   private void initClasses() {
     menu = new Menu(this);
     playing = new Playing(this);
   }
 
+  /**
+   * 
+   * Rulează bucla principală a jocului.
+   */
   @Override
   public void run() {
 
@@ -91,6 +109,10 @@ public class Game implements Runnable {
     }
   }
 
+  /**
+   * 
+   * Actualizează starea jocului în funcție de starea curentă.
+   */
   private void update() {
 
     switch (Gamestate.state) {
@@ -109,6 +131,12 @@ public class Game implements Runnable {
 
   }
 
+  /**
+   * 
+   * Desenează starea curentă a jocului.
+   * 
+   * @param g Contextul grafic pe care se desenează.
+   */
   public void render(Graphics g) {
 
     switch (Gamestate.state) {
@@ -124,23 +152,44 @@ public class Game implements Runnable {
     }
   }
 
+  /**
+   * 
+   * Pornește bucla principală a jocului într-un fir de execuție separat.
+   */
   private void startGameLoop() {
     gameThread = new Thread(this);
     gameThread.start();
 
   }
 
+  /**
+   * 
+   * Returnează meniul jocului.
+   * 
+   * @return Obiectul Menu reprezentând meniul jocului.
+   */
   public Menu getMenu() {
     return menu;
   }
 
+  /**
+   * 
+   * Returnează obiectul Playing.
+   * 
+   * @return Obiectul Playing reprezentând starea de joc curentă.
+   */
   public Playing getPlaying() {
     return playing;
   }
 
+  /**
+   * 
+   * Metodă apelată atunci când fereastra jocului pierde focusul. Resetează
+   * direcțiile jucătorului în starea Playing.
+   */
   public void windowFocusLost() {
     if (Gamestate.state == Gamestate.PLAYING)
       playing.getPlayer().resetDirBooleans();
   }
-  
+
 }

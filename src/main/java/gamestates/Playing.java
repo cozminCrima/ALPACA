@@ -19,15 +19,16 @@ import ui.PauseOverlay;
 import ui.LevelCompletedOverlay;
 import utilz.*;
 
+/**
+ * Clasa Playing reprezintă starea jocului în desfășurare. Extinde clasa State
+ * și implementează interfețele Statemethods. Această clasă gestionează jocul în
+ * timpul rulează și interacțiunea cu elementele acestuia.
+ */
 public class Playing extends State implements Statemethods {
-  public Playing(Game game) {
-    super(game);
-    initClasses();
-  }
 
   private Player player;
-  private Enemy cactus1,cactus2,cactus3;
-  private Enemy cannon1,cannon2,cannon3;
+  private Enemy cactus1, cactus2, cactus3;
+  private Enemy cannon1, cannon2, cannon3;
   private CollisionManager collisionManager;
   private LevelManager levelManager;
   private BufferedImage bg = null;
@@ -40,25 +41,37 @@ public class Playing extends State implements Statemethods {
   private int xLvlOffset;
   private int leftBorder = (int) (0.3 * Game.GAME_WIDTH);
   private int rightBorder = (int) (0.7 * Game.GAME_WIDTH);
-  private int lvlTilesWide = 100;// Level.getLvlData()[0].length;
+  private int lvlTilesWide = 100;
   private int maxTilesOffset = lvlTilesWide - Game.TILES_WIDTH;
   private int maxLvlOffsetX = maxTilesOffset * Game.TILES_SIZE;
 
+  /**
+   * Constructorul clasei Playing. Inițializează starea jocului și încarcă
+   * elementele necesare.
+   *
+   * @param game Referință către obiectul Game.
+   */
+  public Playing(Game game) {
+    super(game);
+    initClasses();
+  }
+
+  /**
+   * Metoda privată care inițializează clasele necesare. Inițializează managerul
+   * de nivel, managerul de coliziuni, jucătorul și inamicii. Adaugă coliziunile
+   * la managerul de coliziuni. Inițializează elementele de interfață
+   * (overlay-uri, ecranul de moarte, etc.).
+   */
   private void initClasses() {
     levelManager = new LevelManager(game);
-
     collisionManager = new CollisionManager();
-    player = new Player(200, 200, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager); // ,(int) (100
-                                                                                                         // *
-                                                                                                         // SCALE),(int)
-    // (100 * SCALE));
-
-    cactus1 = new Enemy(400, 100, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager, EnemyType.Cactus,
-        player);
-    cactus2 = new Enemy(3935, 100, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager, EnemyType.Cactus,
-        player);
-    cactus3 = new Enemy(4190, 100, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager, EnemyType.Cactus,
-        player);
+    player = new Player(200, 200, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager);
+    cactus1 = new Enemy(400, 100, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager,
+        EnemyType.Cactus, player);
+    cactus2 = new Enemy(3935, 100, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager,
+        EnemyType.Cactus, player);
+    cactus3 = new Enemy(4190, 100, (int) (100 * Game.SCALE), (int) (100 * Game.SCALE), collisionManager,
+        EnemyType.Cactus, player);
     cannon1 = new Enemy(3495, 100, (int) (65 * Game.SCALE), (int) (42 * Game.SCALE), collisionManager, EnemyType.Cannon,
         player);
     cannon2 = new Enemy(5500, 100, (int) (65 * Game.SCALE), (int) (42 * Game.SCALE), collisionManager, EnemyType.Cannon,
@@ -70,8 +83,7 @@ public class Playing extends State implements Statemethods {
     collisionManager.addCollider(cactus1.getCollider());
     collisionManager.addCollider(cactus2.getCollider());
     collisionManager.addCollider(cactus3.getCollider());
-    //collisionManager.addCollider(enemy.getCollider());
-    //collisionManager.addCollider(enemy2.getCollider());
+
     player.loadLvlData(levelManager.getCurrentLevel().getLvlData());
     cactus1.loadLvlData(levelManager.getCurrentLevel().getLvlData());
     cactus2.loadLvlData(levelManager.getCurrentLevel().getLvlData());
@@ -79,6 +91,7 @@ public class Playing extends State implements Statemethods {
     cannon1.loadLvlData(levelManager.getCurrentLevel().getLvlData());
     cannon2.loadLvlData(levelManager.getCurrentLevel().getLvlData());
     cannon3.loadLvlData(levelManager.getCurrentLevel().getLvlData());
+
     if (bg == null) {
       bg = LoadSave.GetSpriteAtlas(LoadSave.BACKGROUND);
     }
@@ -88,19 +101,26 @@ public class Playing extends State implements Statemethods {
     levelCompletedOverlay = new LevelCompletedOverlay(this);
   }
 
+  /**
+   * Metoda apelată atunci când fereastra jocului pierde focusul. Resetează
+   * direcțiile jucătorului.
+   */
   public void windowFocusLost() {
     player.resetDirBooleans();
   }
 
+  /**
+   * Returnează obiectul jucător.
+   *
+   * @return Obiectul Player asociat stării de joc.
+   */
   public Player getPlayer() {
     return player;
   }
 
   @Override
   public void update() {
-
     if (!paused && !finished && !player.isDead()) {
-
       checkFinish();
       checkCloseToBorder();
       levelManager.update();
@@ -119,29 +139,35 @@ public class Playing extends State implements Statemethods {
       cannon1.setVisible(HelpMethods.IsInFOV(cannon1.getCollider().getHitbox(), xLvlOffset));
       cannon2.setVisible(HelpMethods.IsInFOV(cannon2.getCollider().getHitbox(), xLvlOffset));
       cannon3.setVisible(HelpMethods.IsInFOV(cannon3.getCollider().getHitbox(), xLvlOffset));
-
-      // System.out.println(HelpMethods.IsInFOV(enemy.getCollider().getHitbox(),xLvlOffset));
-
     } else if (paused) {
       pauseOverlay.update();
     } else if (finished) {
 
     }
-
   }
 
+  /**
+   * Verifică dacă jucătorul a ajuns la sfârșitul nivelului. Setează variabila
+   * "finished" în cazul în care jucătorul a ajuns la sfârșit.
+   */
   private void checkFinish() {
     if (player.getCollider().getHitbox().x > 5400) {
       finished = true;
     }
   }
 
+  /**
+   * Repornește jocul. Setează variabila "paused" la false.
+   */
   public void unpauseGame() {
     paused = false;
   }
 
+  /**
+   * Verifică dacă jucătorul se află aproape de marginea vizibilă a nivelului și
+   * ajustează offsetul de afișare în consecință.
+   */
   private void checkCloseToBorder() {
-
     int playerX = (int) player.getCollider().getHitbox().x;
     int diff = playerX - xLvlOffset;
 
@@ -154,7 +180,6 @@ public class Playing extends State implements Statemethods {
       xLvlOffset = maxLvlOffsetX;
     else if (xLvlOffset < 0)
       xLvlOffset = 0;
-
   }
 
   @Override
@@ -179,7 +204,6 @@ public class Playing extends State implements Statemethods {
       levelCompletedOverlay.draw(g);
 
   }
-  
 
   public void mouseDragged(MouseEvent e) {
     if (paused)

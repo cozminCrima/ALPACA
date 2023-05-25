@@ -9,12 +9,23 @@ import main.Game;
 import ui.MenuButton;
 import utilz.LoadSave;
 
+/**
+ * Clasa Menu reprezintă starea meniului în joc. Extinde clasa State și
+ * implementează interfețele Statemethods. Această clasă gestionează afișarea și
+ * interacțiunea cu meniul principal al jocului.
+ */
 public class Menu extends State implements Statemethods {
 
   private MenuButton[] buttons = new MenuButton[3];
   private BufferedImage backgroundImg, startbgImg;
   private int menuX, menuY, menuWidth, menuHeight;
 
+  /**
+   * Constructorul clasei Menu. Inițializează starea meniului și încarcă butoanele
+   * și imaginile de fundal.
+   *
+   * @param game Referință către obiectul Game.
+   */
   public Menu(Game game) {
     super(game);
     loadButtons();
@@ -22,15 +33,22 @@ public class Menu extends State implements Statemethods {
     startbgImg = LoadSave.GetSpriteAtlas(LoadSave.START_BG);
   }
 
+  /**
+   * Metoda privată care încarcă imaginea de fundal pentru meniu. Calculează
+   * dimensiunile și poziția meniului pe ecran.
+   */
   private void loadBackground() {
     backgroundImg = LoadSave.GetSpriteAtlas(LoadSave.MENU_BG);
     menuWidth = (int) (backgroundImg.getWidth() * Game.SCALE);
     menuHeight = (int) (backgroundImg.getHeight() * Game.SCALE);
     menuX = Game.GAME_WIDTH / 2 - menuWidth / 2;
     menuY = (int) (45 * Game.SCALE);
-
   }
 
+  /**
+   * Metoda privată care încarcă butoanele din meniu. Inițializează butoanele și
+   * le setează poziția și starea inițială.
+   */
   private void loadButtons() {
     buttons[0] = new MenuButton(Game.GAME_WIDTH / 2, (int) (150 * Game.SCALE), 0, Gamestate.PLAYING);
     buttons[1] = new MenuButton(Game.GAME_WIDTH / 2, (int) (220 * Game.SCALE), 1, Gamestate.OPTIONS);
@@ -83,6 +101,10 @@ public class Menu extends State implements Statemethods {
 
   }
 
+  /**
+   * Metoda privată care resetează starea butoanelor. Setează stările butoanelor
+   * la valorile inițiale.
+   */
   private void resetButtons() {
     for (MenuButton mb : buttons)
       mb.resetBools();

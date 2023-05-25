@@ -8,10 +8,10 @@ import javax.imageio.ImageIO;
 
 public class LoadSave {
   public static final String COMPLETED_IMG = "completed_sprite.png";
-  public static final String BALL= "ball.png";
-  public static final String DEATH_SCREEN="death_screen2.png";
-  public static final String CACTUS="cactus.png";
-  public static final String CANNON="canon_atlas.png";
+  public static final String BALL = "ball.png";
+  public static final String DEATH_SCREEN = "death_screen2.png";
+  public static final String CACTUS = "cactus.png";
+  public static final String CANNON = "canon_atlas.png";
   public static final String PLAYER_ATLAS = "Spritesheet_idle_walk_attack_jump_fall.png";
   public static final String LEVEL_ATLAS = "lvlamap1.png";
   public static final String MENU_BUTTONS = "button_atlas.png";

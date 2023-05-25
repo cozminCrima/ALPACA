@@ -7,10 +7,20 @@ import java.awt.event.MouseMotionListener;
 import gamestates.Gamestate;
 import main.GamePanel;
 
+/**
+ * 
+ * Clasa pentru gestionarea evenimentelor de mouse.
+ */
 public class MouseInputs implements MouseListener, MouseMotionListener {
 
   private GamePanel gamePanel;
 
+  /**
+   * 
+   * Constructor pentru obiectul MouseInputs.
+   * 
+   * @param gamePanel Panoul jocului asociat.
+   */
   public MouseInputs(GamePanel gamePanel) {
     this.gamePanel = gamePanel;
   }
@@ -23,9 +33,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
       break;
     default:
       break;
-
     }
-
   }
 
   @Override
@@ -39,9 +47,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
       break;
     default:
       break;
-
     }
-
   }
 
   @Override
@@ -52,9 +58,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
       break;
     default:
       break;
-
     }
-
   }
 
   @Override
@@ -68,9 +72,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
       break;
     default:
       break;
-
     }
-
   }
 
   @Override
@@ -84,20 +86,17 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
       break;
     default:
       break;
-
     }
-
   }
 
   @Override
   public void mouseEntered(MouseEvent e) {
-    // TODO Auto-generated method stub
-
+//Nu se implementează
   }
 
   @Override
   public void mouseExited(MouseEvent e) {
-
+//Nu se implementează
   }
 
 }
